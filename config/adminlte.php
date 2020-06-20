@@ -232,7 +232,13 @@ return [
 
     'menu' => [
         [
-            'text'        => 'Add Pages',
+            'text'        => 'All Pages',
+            'url'         => 'pages/',
+            'active'      => ['pages/', 'pages/*/edit'],
+            'icon'        => 'far fa-fw fa-file-alt'
+        ],
+        [
+            'text'        => 'Add Page',
             'url'         => 'pages/create',
             'icon'        => 'far fa-fw fa-file'
         ],

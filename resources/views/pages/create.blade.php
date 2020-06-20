@@ -3,7 +3,7 @@
 @section('title', 'Create Pages')
 
 @section('content_header')
-    <h1>Create Pages</h1>
+    <h1>Create Page</h1>
     @include('component/validation')
 @stop
 
@@ -16,6 +16,7 @@
         </div>
         <div>
             <label for="pageContent">Konten</label>
+            <p class="text-danger"><em>*Gunakan menu insert untuk memasukkan gambar</em></p>
             <textarea name="page_content" class="form-control" id="pageContent" rows="10">
                 Tulis isi halaman disini ...
             </textarea>
@@ -37,9 +38,9 @@
             selector: 'textarea#pageContent',
             height : 480,
             plugins : 'advlist link image lists',
-            automatic_uploads: true,
-            images_upload_url: '{{ route('pages.image') }}',
             images_upload_credentials: true,
+            images_upload_url: '{{ route('pages.image') }}',
+            automatic_uploads: true,
             image_class_list: [
                 {title: 'Responsive Image', value: 'img-fluid'},
             ],

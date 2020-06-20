@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Pages;
+use Illuminate\Support\Facades\Auth;
+use App\Page;
+
 
 class PageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,8 @@ class PageController extends Controller
      */
     public function index()
     {
-        return view('pages/index');
+        $pages = Page::all();
+        return view('pages/index')->with('pages', $pages);
     }
 
     /**
@@ -39,11 +47,11 @@ class PageController extends Controller
             'page_title' => 'required',
             'page_content' => 'required'
         ]);
-        $page['user_id'] = 1;
-        $page = Pages::create($page);
+        $page['user_id'] = Auth::user()->user_id;
+        $page = Page::create($page);
         $page->save();
 
-        return redirect()->back()->with('success', 'Halaman ditambahkan');
+        return redirect()->route('pages.index')->with('success', 'Halaman ditambahkan');
     }
 
     /**
@@ -63,9 +71,10 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        //
+        $page = Page::where('slug', $slug)->first();
+        return view('pages.edit')->with('page', $page);
     }
 
     /**
@@ -75,9 +84,23 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        //
+        $request->validate([
+            'page_title' => 'required',
+            'page_content' => 'required'
+        ]);
+
+        $page = Page::where('slug', $slug)->first();
+
+        $page->fill([
+            'page_title' => $request->input('page_title'),
+            'page_content' => $request->input('page_content')
+        ]);
+        $page['user_id'] = Auth::user()->user_id;
+        $page->save();
+
+        return redirect()->back()->with('success', 'Halaman diupdate');
     }
 
     /**
@@ -88,24 +111,24 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $page = Page::find($id);
+        $title = $page->page_title;
+        $page->delete();
+        return back()->with('success', $title . " successfully deleted");
     }
 
     public function uploadImage(Request $request)
     {
-        $this->validate($request, [
-            'file' => 'required|image|mimes:jpeg,png,jpg'
+        $request->validate([
+           'file' => 'required|file|image'
         ]);
 
-        $file = $request->file('upload');
-        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $fileName = md5($fileName. time()) . '.' . $file->getClientOriginalExtension();
+        $file = $request->file('file');
+        $filename = md5($file->getClientOriginalName(). time()) .'.'. $file->getClientOriginalExtension();
 
-        $file->move(public_path('uploads'), $fileName);
+        $file->move(public_path('/uploads'), $filename);
 
-        $location = asset('uploads/' . $fileName);
-        $location = parse_url($location, PHP_URL_PATH);
+        return response()->json(['location' => '/uploads/'.$filename]);
 
-        return json_encode(['location' => $location]);
     }
 }

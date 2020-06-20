@@ -17,9 +17,12 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/', 'PageController@index');
-Route::get('/pages/create', 'PageController@create');
-Route::get('/pages/{id}/edit', 'PageController@edit');
+
+Route::get('/pages', 'PageController@index')->name('pages.index');
+Route::get('/pages/create', 'PageController@create')->name('pages.create');
+Route::get('/pages/{slug}/edit', 'PageController@edit')->name('pages.edit');
+Route::delete('/pages/{id}', 'PageController@destroy')->name('pages.destroy');
 Route::post('/pages', 'PageController@store')->name('pages.store');
-Route::post('/images', 'PageController@uploadImage')->name('pages.image');
+Route::put('/pages/{slug}/', 'PageController@update')->name('pages.update');
+Route::post('/upload/images', 'PageController@uploadImage')->name('pages.image');
 Route::auth();
