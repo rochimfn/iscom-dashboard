@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Mahasiswa;
+use App\Team;
+use App\CompetitionCategory;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +26,17 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+
+    /**
+     * Override default Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        $competitionCategories = CompetitionCategory::all();
+        return view('auth.register')->with('competitionCategories', $competitionCategories);
+    }
 
     /**
      * Where to redirect users after registration.
@@ -50,9 +64,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'user_name' => ['required', 'string', 'max:255', 'unique:App\User,user_name'],
+            'user_email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,user_email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'mahasiswa_name' => ['required', 'string'],
+            'team_name' => ['required', 'string', 'unique:App\Team,team_name'],
+            'competition_category' => ['required', 'string']
         ]);
     }
 
@@ -64,10 +81,26 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $category = CompetitionCategory::where('competition_category_abbreviation', $data['competition_category'])->first();
+
+        $team = Team::create([
+           'team_name' => $data['team_name'],
+           'team_competition_category_id' => $category->competition_category_id
+        ]);
+        $team->save();
+
+        Mahasiswa::create([
+            'mahasiswa_name' => $data['mahasiswa_name'],
+            'mahasiswa_nrp' => $data['user_name'],
+            'mahasiswa_team_id' => $team->team_id,
+            'is_team_leader' => true
+        ]);
+
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'user_name' => $data['user_name'],
+            'user_email' => $data['user_email'],
             'password' => Hash::make($data['password']),
+            'user_role_id' => 2, // Mahasiswa
         ]);
     }
 }

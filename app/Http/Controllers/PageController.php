@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Pages;
 
 class PageController extends Controller
 {
@@ -34,7 +35,15 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $page = $request->validate([
+            'page_title' => 'required',
+            'page_content' => 'required'
+        ]);
+        $page['user_id'] = 1;
+        $page = Pages::create($page);
+        $page->save();
+
+        return redirect()->back()->with('success', 'Halaman ditambahkan');
     }
 
     /**

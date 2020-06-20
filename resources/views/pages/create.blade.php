@@ -4,10 +4,12 @@
 
 @section('content_header')
     <h1>Create Pages</h1>
+    @include('component/validation')
 @stop
 
 @section('content')
-    <form action="{{route('pages.store')}}">
+    <form action="{{route('pages.store')}}" method="POST">
+        @csrf
         <div class="form-group">
             <label for="pageTitle">Judul</label>
             <input type="text" class="form-control" name="page_title" id="pageTitle">
@@ -18,7 +20,7 @@
                 Tulis isi halaman disini ...
             </textarea>
         </div>
-        <div class="text-right">
+        <div class="text-right mb-2">
             <br>
             <button class="btn btn-primary" type="submit" >Publish</button>
         </div>

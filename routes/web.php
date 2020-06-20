@@ -22,4 +22,4 @@ Route::get('/pages/create', 'PageController@create');
 Route::get('/pages/{id}/edit', 'PageController@edit');
 Route::post('/pages', 'PageController@store')->name('pages.store');
 Route::post('/images', 'PageController@uploadImage')->name('pages.image');
-
+Route::auth();

@@ -17,7 +17,6 @@ class AddMultipleFieldsToUsersTable extends Migration
             $table->renameColumn('id', 'user_id');
             $table->renameColumn('name', 'user_name');
             $table->renameColumn('email', 'user_email');
-            $table->renameColumn('password', 'user_password');
             $table->unsignedBigInteger('user_role_id');
             $table->softDeletes();
         });

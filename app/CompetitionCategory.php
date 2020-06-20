@@ -29,6 +29,7 @@ class CompetitionCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'competition_category_name'
+        'competition_category_name',
+        'competition_category_abbreviation'
     ];
 }

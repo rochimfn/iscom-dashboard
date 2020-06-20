@@ -16,6 +16,7 @@ class CreateCompetitionCategoriesTable extends Migration
         Schema::create('competition_categories', function (Blueprint $table) {
             $table->bigIncrements('competition_category_id');
             $table->string('competition_category_name');
+            $table->string('competition_category_abbreviation');
             $table->timestamps();
             $table->softDeletes();
         });
