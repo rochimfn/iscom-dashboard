@@ -56,11 +56,11 @@
             </div>
             <div class="form-group">
                 <label for="pageTitle">NRP</label>
-                <input type="text" class="form-control" name="user_name" id="pageTitle">
+                <input type="text" class="form-control" name="nrp" id="pageTitle">
             </div>
             <div class="form-group">
                 <label for="pageTitle">Email</label>
-                <input type="text" class="form-control" name="user_email" id="pageTitle">
+                <input type="text" class="form-control" name="email" id="pageTitle">
             </div>
             <div class="text-right mb-2">
                 <br>

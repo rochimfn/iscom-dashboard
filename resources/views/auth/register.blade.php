@@ -67,16 +67,16 @@
 
         {{-- Email field --}}
         <div class="input-group mb-3">
-            <input type="email" name="user_email" class="form-control {{ $errors->has('user_email') ? 'is-invalid' : '' }}"
-                   value="{{ old('user_email') }}" placeholder="Email">
+            <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                   value="{{ old('email') }}" placeholder="Email">
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
                 </div>
             </div>
-            @if($errors->has('user_email'))
+            @if($errors->has('email'))
                 <div class="invalid-feedback">
-                    <strong>{{ $errors->first('user_email') }}</strong>
+                    <strong>{{ $errors->first('email') }}</strong>
                 </div>
             @endif
         </div>

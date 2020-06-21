@@ -8,7 +8,11 @@
     </div>
 @endif
 @if (session('success'))
-    <div class="alert alert-success mt-1">
-        {{ session('success') }}
+    <div class="alert alert-succes mt-1">
+        <ul>
+            @foreach ( session('success') as $success)
+                <li>{{ $success }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif

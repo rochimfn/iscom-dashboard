@@ -16,7 +16,6 @@ class AddMultipleFieldsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->renameColumn('id', 'user_id');
             $table->renameColumn('name', 'user_name');
-            $table->renameColumn('email', 'user_email');
             $table->unsignedBigInteger('user_role_id');
             $table->softDeletes();
         });
