@@ -35,4 +35,13 @@ class Mahasiswa extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->hasMany('App\User',  'user_name', 'mahasiswa_nrp');
+    }
+    public function team()
+    {
+        return $this->belongsTo('App\Team', 'mahasiswa_team_id', 'team_id');
+    }
 }

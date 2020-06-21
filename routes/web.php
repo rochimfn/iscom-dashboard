@@ -25,4 +25,14 @@ Route::delete('/pages/{id}', 'PageController@destroy')->name('pages.destroy');
 Route::post('/pages', 'PageController@store')->name('pages.store');
 Route::put('/pages/{slug}/', 'PageController@update')->name('pages.update');
 Route::post('/upload/images', 'PageController@uploadImage')->name('pages.image');
+
+
+Route::get('/users', 'UserController@index')->name('users.index');
+Route::get('/users/create', 'UserController@create')->name('users.create');
+Route::get('/users/{user_name}/edit', 'UserController@edit')->name('users.edit');
+Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');
+Route::post('/users', 'UserController@store')->name('users.store');
+Route::put('/users/{user_name}/', 'UserController@update')->name('users.update');
+
+Route::get('/users', 'UserController@index')->name('users.index');
 Route::auth();

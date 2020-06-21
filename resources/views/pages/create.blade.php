@@ -39,7 +39,7 @@
             height : 480,
             plugins : 'advlist link image lists',
             images_upload_credentials: true,
-            images_upload_url: '{{ route('pages.image') }}',
+            images_upload_url: '{{ route("pages.image") }}',
             automatic_uploads: true,
             image_class_list: [
                 {title: 'Responsive Image', value: 'img-fluid'},

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,4 +45,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function mahasiswa()
+    {
+        return $this->hasOne('App\Mahasiswa', 'mahasiswa_nrp', 'user_name');
+    }
+    public function dosen()
+    {
+        return $this->hasOne('App\Dosen', 'user_id', 'user_id');
+    }
 }
