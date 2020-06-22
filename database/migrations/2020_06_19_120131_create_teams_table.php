@@ -18,7 +18,6 @@ class CreateTeamsTable extends Migration
             $table->string('team_name');
             $table->unsignedBigInteger('team_competition_category_id');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

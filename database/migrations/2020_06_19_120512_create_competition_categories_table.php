@@ -18,7 +18,6 @@ class CreateCompetitionCategoriesTable extends Migration
             $table->string('competition_category_name');
             $table->string('competition_category_abbreviation');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
