@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function dosen()
     {
-        return $this->hasOne('App\Dosen', 'user_id', 'user_id');
+        return $this->hasOne('App\Dosen', 'dosen_user_id', 'user_id');
     }
 
     public function team()

@@ -10,7 +10,7 @@
 @stop
 
 @section('content')
-<table id="pagesTable" class="table table-striped">
+<table id="pagesTable" class="table table-striped table-responsive-sm">
     <thead>
         <tr>
             <th>No.</th>
@@ -51,5 +51,4 @@
 @stop
 
 @section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)
 

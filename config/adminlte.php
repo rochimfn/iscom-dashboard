@@ -16,7 +16,7 @@ return [
 
     'title' => 'ISCOM',
     'title_prefix' => '',
-    'title_postfix' => '',
+    'title_postfix' => '| ISCOM',
 
     /*
     |--------------------------------------------------------------------------
@@ -242,15 +242,30 @@ return [
             'url'         => 'pages/create',
             'icon'        => 'far fa-fw fa-file'
         ],
+        [
+            'text'        => 'Members Page',
+            'url'         => 'home/members',
+            'icon'        => 'fas fa-fw fa-users'
+        ],
+        [
+            'text'        => 'Participant List Page',
+            'url'         => 'users',
+            'icon'        => 'fas fa-fw fa-users'
+        ],
+        [
+            'text'        => 'Evaluator List Page',
+            'url'         => 'users/dosen',
+            'icon'        => 'fas fa-fw fa-users'
+        ],
         'Account Settings',
         [
             'text' => 'profile',
-            'url'  => 'admin/settings',
+            'url'  => 'home/settings',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
+            'url'  => 'home/password/change',
             'icon' => 'fas fa-fw fa-lock',
         ]
     ],

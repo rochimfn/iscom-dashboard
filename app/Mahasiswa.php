@@ -44,4 +44,14 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo('App\Team', 'mahasiswa_team_id', 'team_id');
     }
+    public function category()
+    {
+        return $this->hasOneThrough(
+            'App\CompetitionCategory',
+            'App\Team',
+            'team_id',
+            'competition_category_id',
+            'mahasiswa_team_id',
+            'team_competition_category_id');
+    }
 }

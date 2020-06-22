@@ -28,7 +28,9 @@ class AddMultipleFieldsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role_id', 'deleted_at']);
+            $table->renameColumn('user_id', 'id');
+            $table->renameColumn('user_name', 'name');
+            $table->dropColumn('user_role_id');
         });
     }
 }

@@ -25,7 +25,7 @@ class Dosen extends Model
      *
      * @var array
      */
-    protected $fillable = ['dosen_name','user_id'];
+    protected $fillable = ['dosen_name','dosen_user_id'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -36,6 +36,6 @@ class Dosen extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id', 'user_id');
+        return $this->belongsTo('App\User', 'dosen_user_id', 'user_id');
     }
 }

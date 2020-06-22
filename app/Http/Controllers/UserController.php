@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\CompetitionCategory;
 use App\User;
 use App\Team;
 use App\Mahasiswa;
+use App\Dosen;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -21,8 +23,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('mahasiswa')->with('dosen')->get();
-        return $users;   
+        $participants = CompetitionCategory::with('team')->get();
+        $users = Mahasiswa::with('user')->with('team')->with('category')->get();
+        return view('users/index')->with(['users' => $users, 'participants' => $participants]);   
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexDosen()
+    {
+        $users = Dosen::with('user')->get();
+        return view('users/index_dosen')->with('users', $users);   
     }
 
     /**
@@ -51,7 +65,7 @@ class UserController extends Controller
     {
         $data = $this->validate($request,[
             'mahasiswa_name' => ['required','string'],
-            'nrp' => ['required', 'unique:App\User,user_name'],
+            'nrp' => ['required','alpha_dash', 'unique:App\User,user_name'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
         ]);
         
@@ -74,7 +88,34 @@ class UserController extends Controller
 
         $this->sendResetLinkEmail($request);
 
-        return redirect('users/create')->with('success', 'Anggota berhasil ditambahkan ke Team ' . $leader['team']['team_name'] .', minta anggota periksa email');
+        return redirect('home/members')->with('success', 'Anggota berhasil ditambahkan ke Team ' . $leader['team']['team_name'] .', minta anggota periksa email');
+    }
+
+    public function storeDosen(Request $request)
+    {
+        $data = $this->validate($request,[
+            'dosen_name' => ['required','string'],
+            'user_name' => ['required','alpha_dash', 'unique:App\User,user_name'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
+        ]);
+
+        $user = User::create([
+            'user_name' => $data['user_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['user_name'].'37645'),
+            'user_role_id' => 3, // Dosen
+        ]);
+        
+        $user->save();
+
+        Dosen::create([
+            'dosen_name' => $data['dosen_name'],
+            'dosen_user_id' => $user['user_id']
+        ]);
+
+        $this->sendResetLinkEmail($request);
+
+        return redirect('users/dosen')->with('success', 'Evaluator berhasil ditambahkan');
     }
 
     /**
@@ -110,7 +151,7 @@ class UserController extends Controller
     {
         $data = $this->validate($request,[
             'mahasiswa_name' => ['required','string'],
-            'nrp' => ['required'],
+            'nrp' => ['required', 'alpha_dash'],
             'email' => ['required', 'string', 'email', 'max:255'],
         ]);
 
@@ -132,7 +173,36 @@ class UserController extends Controller
         $user->save();
         $mahasiswa->save();
 
-        return redirect('users/create')->with('success', 'Data anggota berhasi diubah');
+        if($mahasiswa['email'] !== $user['email']) {
+            $this->sendResetLinkEmail($request);
+        }
+
+        return redirect('home/members')->with('success', 'Data anggota berhasi diubah');
+    }
+
+    public function updateDosen(Request $request, $id)
+    {
+        $data = $this->validate($request,[
+            'dosen_name' => ['required','string'],
+            'user_name' => ['required', 'alpha_dash'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+
+        $user = User::where('user_id', $id)->first();
+        $dosen = Dosen::where('dosen_user_id', $user['user_id'])->first();
+        
+        $user['user_name'] = $data['user_name'];
+        $user['email'] = $data['email'];
+        $dosen['dosen_name'] = $data['dosen_name'];
+        
+        $user->save();
+        $dosen->save();
+
+        if($dosen['email'] !== $user['email']) {
+            $this->sendResetLinkEmail($request);
+        }
+
+        return redirect('users/dosen')->with('success', 'Data evaluator berhasi diubah');
     }
 
     /**
@@ -156,6 +226,80 @@ class UserController extends Controller
         $user->delete();
         $mahasiswa->delete();
 
-        return redirect('users/create')->with('success', 'Anggota ' . $name .' berhasil dihapus dari Tim');   
+        return redirect('home/members')->with('success', 'Anggota ' . $name .' berhasil dihapus dari Tim');   
+    }
+
+    public function destroyDosen($id)
+    {
+        $user = User::where('user_id', $id)->first();
+        $dosen = Dosen::where('dosen_user_id', $user['user_id'])->first();
+
+        $name = $dosen['dosen_name'];
+        $user->delete();
+        $dosen->delete();
+
+        return redirect('users/dosen')->with('success', 'Evaluator ' . $name .' berhasil dihapus');   
+    }
+
+    public function changePasswordForm()
+    {
+        return view('auth/passwords/change_password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $data = $this->validate($request, [
+            'old_password' => ['required','string'],
+            'new_password' => ['required','string'],
+            'confirmation_new_password' => ['required','string']
+        ]);
+
+        if($data['new_password'] !== $data['confirmation_new_password'])
+        {
+            return redirect()->back()->withErrors('Konfirmasi password tidak sesuai');
+        }
+
+        $user = User::where('user_id', Auth::user()->user_id)->first();
+        
+        if( !Hash::check( $data['old_password'], $user['password']))
+        {
+            return redirect()->back()->withErrors('Password lama tidak sesuai');
+        }
+
+        $user['password'] = $data['new_password'];
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password berhasi diubah');
+    }
+
+    public function changeProfile()
+    {
+        return view('auth/passwords/change_password');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $data = $this->validate($request, [
+            'old_password' => ['required','string'],
+            'new_password' => ['required','string'],
+            'confirmation_new_password' => ['required','string']
+        ]);
+
+        if($data['new_password'] !== $data['confirmation_new_password'])
+        {
+            return redirect()->back()->withErrors('Konfirmasi password tidak sesuai');
+        }
+
+        $user = User::where('user_id', Auth::user()->user_id)->first();
+        
+        if( !Hash::check( $data['old_password'], $user['password']))
+        {
+            return redirect()->back()->withErrors('Password lama tidak sesuai');
+        }
+
+        $user['password'] = $data['new_password'];
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password berhasi diubah');
     }
 }
