@@ -264,8 +264,14 @@ return [
             'icon' => 'fas fa-fw fa-user',
         ],
         [
+            'text' => 'Dosen profile',
+            'url'  => 'home/dosen/settings',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
             'text' => 'change_password',
             'url'  => 'home/password/change',
+            'active' => ['home/dosen/password/change', 'home/password/change'],
             'icon' => 'fas fa-fw fa-lock',
         ]
     ],

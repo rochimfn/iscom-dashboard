@@ -310,4 +310,60 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Profil berhasil diubah');
     }
+
+    public function changeDosenProfile()
+    {
+        $user = User::with('dosen')->where('user_id', Auth::user()->user_id)->first();
+        return view('auth/dosen_profile')->with('user', $user);
+    }
+
+    public function updateDosenProfile(Request $request)
+    {
+        $data = $this->validate($request, [
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'dosen_name' => ['required', 'string']
+        ]);
+
+        $user = User::where('user_id', Auth::user()->user_id)->first();
+        $dosen = Dosen::where('user_id', Auth::user()->user_id)->first();
+
+        
+        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+            return redirect()->back()->withErrors('Email sudah terdaftar');
+        }
+        
+
+        $user['email'] = $data['email'];
+        $dosen['dosen_name'] = $data['dosen_name'];
+
+        $user->save();
+        $dosen->save();
+
+        return redirect()->back()->with('success', 'Profil berhasil diubah');
+    }
+
+    public function changeDosenProfile()
+    {
+        $user = User::where('user_id', Auth::user()->user_id)->first();
+        return view('auth/admin_profile')->with('user', $user);
+    }
+
+    public function updateDosenProfile(Request $request)
+    {
+        $data = $this->validate($request, [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+
+        $user = User::where('user_id', Auth::user()->user_id)->first();
+        
+        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+            return redirect()->back()->withErrors('Email sudah terdaftar');
+        }
+
+        $user['email'] = $data['email'];
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Profil berhasil diubah');
+    }
 }

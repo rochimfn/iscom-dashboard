@@ -33,6 +33,17 @@ Route::post('/users/dosen', 'UserController@storeDosen')->name('users.dosen.stor
 Route::put('/users/dosen/{id}/', 'UserController@updateDosen')->name('users.dosen.update');
 Route::get('/users', 'UserController@index')->name('users.index');
 
+Route::get('/dashboard/settings', 'UserController@changeAdminProfile')->name('admin.change.profile');
+Route::put('/dashboard/settings', 'UserController@updateAdminProfile')->name('admin.update.profile');
+Route::get('/dashboard/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
+Route::put('/dashboard/password/', 'UserController@updatePassword')->name('update.password');
+
+
+//Route Dosen
+Route::get('/home/dosen/settings', 'UserController@changeDosenProfile')->name('dosen.change.profile');
+Route::put('/home/dosen/settings', 'UserController@updateDosenProfile')->name('dosen.update.profile');
+Route::get('/home/dosen/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
+Route::put('/home/dosen/password/', 'UserController@updatePassword')->name('update.password');
 
 
 //Routes untuk participants
