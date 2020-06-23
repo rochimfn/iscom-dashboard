@@ -269,37 +269,45 @@ class UserController extends Controller
         $user['password'] = $data['new_password'];
         $user->save();
 
-        return redirect()->back()->with('success', 'Password berhasi diubah');
+        return redirect()->back()->with('success', 'Password berhasil diubah');
     }
 
     public function changeProfile()
     {
-        return view('auth/passwords/change_password');
+        $user = User::with('mahasiswa')->with('team')->where('user_id', Auth::user()->user_id)->first();
+        $category = Team::with('category')->where('team_id', $user['team']['team_id'])->first()['category']['competition_category_name'];
+        return view('auth/participant_profile')->with(['user' => $user, 'category' => $category]);
     }
 
     public function updateProfile(Request $request)
     {
         $data = $this->validate($request, [
-            'old_password' => ['required','string'],
-            'new_password' => ['required','string'],
-            'confirmation_new_password' => ['required','string']
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'mahasiswa_name' => ['required', 'string'],
+            'team_name' => ['required', 'string'],
         ]);
 
-        if($data['new_password'] !== $data['confirmation_new_password'])
-        {
-            return redirect()->back()->withErrors('Konfirmasi password tidak sesuai');
-        }
-
         $user = User::where('user_id', Auth::user()->user_id)->first();
+        $mahasiswa = Mahasiswa::where('mahasiswa_nrp',$user['user_name'])->first();
+        $team = Team::where('team_id', $mahasiswa['mahasiswa_team_id'])->first();
+
         
-        if( !Hash::check( $data['old_password'], $user['password']))
-        {
-            return redirect()->back()->withErrors('Password lama tidak sesuai');
+        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+            return redirect()->back()->withErrors('Email sudah terdaftar');
+        }
+        
+        if($team['team_name'] !== $data['team_name'] && !empty(Team::where('team_name', $data['team_name'])->first())) {
+            return redirect()->back()->withErrors('Nama Tim sudah terdaftar');
         }
 
-        $user['password'] = $data['new_password'];
-        $user->save();
+        $user['email'] = $data['email'];
+        $mahasiswa['mahasiswa_name'] = $data['mahasiswa_name'];
+        $team['team_name'] = $data['team_name'];
 
-        return redirect()->back()->with('success', 'Password berhasi diubah');
+        $user->save();
+        $mahasiswa->save();
+        $team->save();
+
+        return redirect()->back()->with('success', 'Profil berhasil diubah');
     }
 }

@@ -35,6 +35,11 @@ class Team extends Model
         return $this->hasMany('App\Mahasiswa', 'mahasiswa_team_id',  'team_id');
     }
 
+    public function category()
+    {
+        return $this->belongsTo('App\CompetitionCategory', 'team_competition_category_id', 'competition_category_id');
+    }
+
     public function user()
     {
         // The first argument is the name of the final model we wish to access,
