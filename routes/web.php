@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 
 // Routes for Administrator
-Route::middleware('admin')->group( function() {
+Route::middleware(['auth','admin'])->group( function() {
 	Route::get('/dashboard/pages', 'PageController@index')->name('admin.pages.index');
 	Route::get('/dashboard/pages/create', 'PageController@create')->name('admin.pages.create');
 	Route::get('/dashboard/pages/{slug}/edit', 'PageController@edit')->name('admin.pages.edit');
@@ -42,7 +42,7 @@ Route::middleware('admin')->group( function() {
 
 
 //Route Dosen
-Route::middleware('dosen')->group( function() {
+Route::middleware(['auth','dosen'])->group( function() {
 	Route::get('/home/dosen/settings', 'UserController@changeDosenProfile')->name('dosen.change.profile');
 	Route::put('/home/dosen/settings', 'UserController@updateDosenProfile')->name('dosen.update.profile');
 	Route::get('/home/dosen/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
@@ -51,7 +51,7 @@ Route::middleware('dosen')->group( function() {
 
 
 //Routes untuk participants
-Route::middleware('participant')->group( function() {
+Route::middleware(['auth','participant'])->group( function() {
 	Route::get('/home/members', 'UserController@memberIndex')->name('participants.users.index');
 	Route::delete('/home/users/{id}', 'UserController@memberDelete')->name('participants.users.delete');
 	Route::post('/home/users', 'UserController@memberStore')->name('participants.users.store');

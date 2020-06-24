@@ -16,11 +16,6 @@ class UserController extends Controller
 {
     use SendsPasswordResetEmails;
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function indexParticipants()
     {
         $participants = CompetitionCategory::with('team')->get();
