@@ -16,7 +16,9 @@ class CreateCompetitionCategoriesTable extends Migration
         Schema::create('competition_categories', function (Blueprint $table) {
             $table->bigIncrements('competition_category_id');
             $table->string('competition_category_name');
-            $table->string('competition_category_abbreviation');
+            $table->string('competition_category_abbreviation')->unique();
+            $table->integer('competition_category_team_limit');
+            $table->boolean('is_kti');
             $table->timestamps();
         });
     }

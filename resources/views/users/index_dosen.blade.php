@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between">
         <h1>Users Evaluator Page</h1>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEvaluatorModal">
-        Tambah Anggota
+        Tambah Evaluator
         </button>
     </div>
     @include('component/validation')

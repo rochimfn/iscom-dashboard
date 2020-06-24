@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'ISCOM',
+    'title' => 'AdminLTE 3',
     'title_prefix' => '',
-    'title_postfix' => '| ISCOM',
+    'title_postfix' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'logo' => '<b>IS</b>COM',
+    'logo' => '<b>Admin</b>LTE',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'usermenu_enabled' => false,
+    'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
@@ -232,48 +232,87 @@ return [
 
     'menu' => [
         [
-            'text'        => 'All Pages',
-            'url'         => 'pages/',
-            'active'      => ['pages/', 'pages/*/edit'],
-            'icon'        => 'far fa-fw fa-file-alt'
+            'text' => 'search',
+            'search' => true,
+            'topnav' => true,
         ],
         [
-            'text'        => 'Add Page',
-            'url'         => 'pages/create',
-            'icon'        => 'far fa-fw fa-file'
+            'text' => 'blog',
+            'url'  => 'admin/blog',
+            'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Members Page',
-            'url'         => 'home/members',
-            'icon'        => 'fas fa-fw fa-users'
+            'text'        => 'pages',
+            'url'         => 'admin/pages',
+            'icon'        => 'far fa-fw fa-file',
+            'label'       => 4,
+            'label_color' => 'success',
         ],
-        [
-            'text'        => 'Participant List Page',
-            'url'         => 'users',
-            'icon'        => 'fas fa-fw fa-users'
-        ],
-        [
-            'text'        => 'Evaluator List Page',
-            'url'         => 'users/dosen',
-            'icon'        => 'fas fa-fw fa-users'
-        ],
-        'Account Settings',
+        ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'url'  => 'home/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'Dosen profile',
-            'url'  => 'home/dosen/settings',
+            'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'change_password',
-            'url'  => 'home/password/change',
-            'active' => ['home/dosen/password/change', 'home/password/change'],
+            'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
-        ]
+        ],
+        [
+            'text'    => 'multilevel',
+            'icon'    => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'level_one',
+                    'url'  => '#',
+                ],
+                [
+                    'text'    => 'level_one',
+                    'url'     => '#',
+                    'submenu' => [
+                        [
+                            'text' => 'level_two',
+                            'url'  => '#',
+                        ],
+                        [
+                            'text'    => 'level_two',
+                            'url'     => '#',
+                            'submenu' => [
+                                [
+                                    'text' => 'level_three',
+                                    'url'  => '#',
+                                ],
+                                [
+                                    'text' => 'level_three',
+                                    'url'  => '#',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'level_one',
+                    'url'  => '#',
+                ],
+            ],
+        ],
+        ['header' => 'labels'],
+        [
+            'text'       => 'important',
+            'icon_color' => 'red',
+            'url'        => '#',
+        ],
+        [
+            'text'       => 'warning',
+            'icon_color' => 'yellow',
+            'url'        => '#',
+        ],
+        [
+            'text'       => 'information',
+            'icon_color' => 'cyan',
+            'url'        => '#',
+        ],
     ],
 
     /*

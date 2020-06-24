@@ -29,7 +29,9 @@ class CompetitionCategory extends Model
      */
     protected $fillable = [
         'competition_category_name',
-        'competition_category_abbreviation'
+        'competition_category_abbreviation',
+        'competition_category_team_limit',
+        'is_kti'
     ];
 
     public function team()

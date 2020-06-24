@@ -342,13 +342,13 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Profil berhasil diubah');
     }
 
-    public function changeDosenProfile()
+    public function changeAdminProfile()
     {
         $user = User::where('user_id', Auth::user()->user_id)->first();
         return view('auth/admin_profile')->with('user', $user);
     }
 
-    public function updateDosenProfile(Request $request)
+    public function updateAdminProfile(Request $request)
     {
         $data = $this->validate($request, [
             'email' => ['required', 'string', 'email', 'max:255'],

@@ -4,7 +4,7 @@
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>All Pages</h1><a href="{{ route('pages.create') }}" class="btn btn-success">New Page</a>
+        <h1>All Pages</h1><a href="{{ route('pages.create') }}" class="btn btn-primary">New Page</a>
     </div>
     @include('component/validation')
 @stop
