@@ -22,7 +22,7 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::all();
-        return view('pages/index')->with('pages', $pages);
+        return view('admin/pages/index')->with('pages', $pages);
     }
 
     /**
@@ -32,7 +32,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('pages/create');
+        return view('admin/pages/create');
     }
 
     /**
@@ -51,7 +51,7 @@ class PageController extends Controller
         $page = Page::create($page);
         $page->save();
 
-        return redirect()->route('pages.index')->with('success', 'Halaman ditambahkan');
+        return redirect()->route('admin.pages.index')->with('success', 'Halaman ditambahkan');
     }
 
     /**
@@ -74,7 +74,7 @@ class PageController extends Controller
     public function edit($slug)
     {
         $page = Page::where('slug', $slug)->first();
-        return view('pages.edit')->with('page', $page);
+        return view('admin/pages/edit')->with('page', $page);
     }
 
     /**
@@ -100,7 +100,7 @@ class PageController extends Controller
         $page['user_id'] = Auth::user()->user_id;
         $page->save();
 
-        return redirect()->back()->with('success', 'Halaman diupdate');
+        return redirect()->route('admin.pages.index')->with('success', 'Halaman diupdate');
     }
 
     /**
@@ -114,7 +114,7 @@ class PageController extends Controller
         $page = Page::find($id);
         $title = $page->page_title;
         $page->delete();
-        return back()->with('success', $title . " successfully deleted");
+        return redirect()->route('admin.pages.index')->with('success', $title . " successfully deleted");
     }
 
     public function uploadImage(Request $request)

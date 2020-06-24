@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-    <form action="{{route('pages.update', $page['slug'])}}" method="POST">
+    <form action="{{route('admin.pages.update', $page['slug'])}}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -40,7 +40,7 @@
             height : 480,
             plugins : 'advlist link image lists',
             images_upload_credentials: true,
-            images_upload_url: '{{ route('pages.image') }}',
+            images_upload_url: '{{ route('admin.pages.image') }}',
             automatic_uploads: true,
             image_class_list: [
                 {title: 'Responsive Image', value: 'img-fluid'},

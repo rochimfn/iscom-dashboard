@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-    <form action="{{ route('member.update.profile')}}" method="POST">
+    <form action="{{ route('participants.update.profile')}}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">

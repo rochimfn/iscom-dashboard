@@ -44,7 +44,7 @@
                     data-email="{{ $member['user'][0]['email'] }}" type="button" class="btn btn-info" onclick="editUser(this)">Edit</button>
                 </td>
                 <td>
-                    <form action="{{ route('users.destroy', $member['user'][0]['user_id']) }}" method="POST">
+                    <form action="{{ route('participants.users.delete', $member['user'][0]['user_id']) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" onclick="return confirm('Anda yakin ingin menghapus dari Tim?');" class="btn btn-danger">Delete</button>
@@ -65,7 +65,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('users.store')}}" method="POST">
+                    <form action="{{route('participants.users.store')}}" method="POST">
                     @csrf
                         <div class="form-group">
                             <label for="userName">Nama Lengkap</label>
@@ -100,7 +100,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('users.store')}}" method="POST" id="editMemberForm">
+                    <form action="{{route('participants.users.store')}}" method="POST" id="editMemberForm">
                     @csrf
                     @method('PUT')
                         <div class="form-group">
@@ -130,7 +130,7 @@
 @section('js')
     <script>
         function editUser(element) {
-            document.getElementById('editMemberForm').action = "{{route('users.store')}}" + "/" + element.dataset.userid;
+            document.getElementById('editMemberForm').action = "{{route('participants.users.store')}}" + "/" + element.dataset.userid;
             document.getElementById('editUserNrp').value = element.dataset.nrp;
             document.getElementById('editUserName').value = element.dataset.name;
             document.getElementById('editUserEmail').value = element.dataset.email;

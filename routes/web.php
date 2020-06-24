@@ -19,19 +19,19 @@ use Illuminate\Support\Facades\Route;
 
 
 // Routes for Administrator
-Route::get('/pages', 'PageController@index')->name('pages.index');
-Route::get('/pages/create', 'PageController@create')->name('pages.create');
-Route::get('/pages/{slug}/edit', 'PageController@edit')->name('pages.edit');
-Route::delete('/pages/{id}', 'PageController@destroy')->name('pages.destroy');
-Route::post('/pages', 'PageController@store')->name('pages.store');
-Route::put('/pages/{slug}/', 'PageController@update')->name('pages.update');
-Route::post('/upload/images', 'PageController@uploadImage')->name('pages.image');
+Route::get('/dashboard/pages', 'PageController@index')->name('admin.pages.index');
+Route::get('/dashboard/pages/create', 'PageController@create')->name('admin.pages.create');
+Route::get('/dashboard/pages/{slug}/edit', 'PageController@edit')->name('admin.pages.edit');
+Route::delete('/dashboard/pages/{id}', 'PageController@destroy')->name('admin.pages.destroy');
+Route::post('/dashboard/pages', 'PageController@store')->name('admin.pages.store');
+Route::put('/dashboard/pages/{slug}/', 'PageController@update')->name('admin.pages.update');
+Route::post('/upload/images', 'PageController@uploadImage')->name('admin.pages.image');
 
-Route::get('/users/dosen', 'UserController@indexDosen')->name('users.dosen.index');
-Route::delete('/users/dosen/{id}', 'UserController@destroyDosen')->name('users.dosen.destroy');
-Route::post('/users/dosen', 'UserController@storeDosen')->name('users.dosen.store');
-Route::put('/users/dosen/{id}/', 'UserController@updateDosen')->name('users.dosen.update');
-Route::get('/users', 'UserController@index')->name('users.index');
+Route::get('/dashboard/users/dosen', 'UserController@indexDosen')->name('admin.users.dosen.index');
+Route::delete('/dashboard/users/dosen/{id}', 'UserController@deleteDosen')->name('admin.users.dosen.delete');
+Route::post('/dashboard/users/dosen', 'UserController@storeDosen')->name('admin.users.dosen.store');
+Route::put('/dashboard/users/dosen/{id}/', 'UserController@updateDosen')->name('admin.users.dosen.update');
+Route::get('/dashboard/users', 'UserController@indexParticipants')->name('admin.users.participants.index');
 
 Route::get('/dashboard/settings', 'UserController@changeAdminProfile')->name('admin.change.profile');
 Route::put('/dashboard/settings', 'UserController@updateAdminProfile')->name('admin.update.profile');
@@ -47,14 +47,14 @@ Route::put('/home/dosen/password/', 'UserController@updatePassword')->name('upda
 
 
 //Routes untuk participants
-Route::get('/home/members', 'UserController@create')->name('users.create');
-Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');
-Route::post('/users', 'UserController@store')->name('users.store');
-Route::put('/users/{id}/', 'UserController@update')->name('users.update');
+Route::get('/home/members', 'UserController@memberIndex')->name('participants.users.index');
+Route::delete('/home/users/{id}', 'UserController@memberDelete')->name('participants.users.delete');
+Route::post('/home/users', 'UserController@memberStore')->name('participants.users.store');
+Route::put('/home/users/{id}/', 'UserController@memberUpdate')->name('participants.users.update');
 Route::get('/home/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
 Route::put('/home/password/', 'UserController@updatePassword')->name('update.password');
-Route::get('/home/settings', 'UserController@changeProfile')->name('change.profile');
-Route::put('/home/settings', 'UserController@updateProfile')->name('member.update.profile');
+Route::get('/home/settings', 'UserController@changeParticipantProfile')->name('participants.change.profile');
+Route::put('/home/settings', 'UserController@updateParticipantProfile')->name('participants.update.profile');
 
 
 

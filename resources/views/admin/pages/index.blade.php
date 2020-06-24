@@ -4,7 +4,7 @@
 
 @section('content_header')
     <div class="d-flex justify-content-between">
-        <h1>All Pages</h1><a href="{{ route('pages.create') }}" class="btn btn-primary">New Page</a>
+        <h1>All Pages</h1><a href="{{ route('admin.pages.create') }}" class="btn btn-primary">New Page</a>
     </div>
     @include('component/validation')
 @stop
@@ -28,9 +28,9 @@
             <td>{{ $page['page_title']}}</td>
             <td>{{ date("j F Y", strtotime($page['created_at'])) }}</td>
             <td>{{ date("j F Y", strtotime($page['updated_at'])) }}</td>
-            <td><a href="{{ route('pages.edit', $page['slug']) }}" class="btn btn-primary">Edit</a></td>
+            <td><a href="{{ route('admin.pages.edit', $page['slug']) }}" class="btn btn-primary">Edit</a></td>
             <td>
-                <form action="{{ route('pages.destroy', $page['page_id']) }}" method="POST">
+                <form action="{{ route('admin.pages.destroy', $page['page_id']) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Anda yakin ingin menghapus halaman?');" class="btn btn-danger">Delete</button>
