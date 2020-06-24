@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -29,6 +30,20 @@ class LoginController extends Controller
     public function username()
     {
         return 'user_name';
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if($user->user_role_id == 1) 
+        {
+            return redirect('/dashboard/users');
+        } elseif ($user->user_role_id == 2) 
+        {
+            return redirect('/home/members');
+        } elseif ($user->user_role_id == 3) 
+        {
+            return redirect('/home/dosen/settings');
+        }
     }
 
     /**

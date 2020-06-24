@@ -11,6 +11,7 @@ use App\CompetitionCategory;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -102,5 +103,19 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'user_role_id' => 2, // Mahasiswa
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        if($user->user_role_id == 1) 
+        {
+            return redirect('/dashboard/users');
+        } elseif ($user->user_role_id == 2) 
+        {
+            return redirect('/home/members');
+        } elseif ($user->user_role_id == 3) 
+        {
+            return redirect('/home/dosen/settings');
+        }
     }
 }
