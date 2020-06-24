@@ -39,7 +39,7 @@
                     data-email="{{ $user['user']['email'] }}" type="button" class="btn btn-info" onclick="editUser(this)">Edit</button>
                 </td>
                 <td>
-                    <form action="{{ route('admin.users.dosen.destroy', $user['user']['user_id']) }}" method="POST">
+                    <form action="{{ route('admin.users.dosen.delete', $user['user']['user_id']) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" onclick="return confirm('Anda yakin ingin menghapus evaluator?');" class="btn btn-danger">Delete</button>

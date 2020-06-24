@@ -16,7 +16,7 @@ class CheckParticipant
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->user_role_id == 3 ) {
+        if(Auth::user()->user_role_id == 2 ) {
             return $next($request);
         } else {
             return redirect()->route('login');
