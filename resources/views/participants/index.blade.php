@@ -5,9 +5,11 @@
 @section('content_header')
     <div class="d-flex justify-content-between">
         <h1>Anggota Tim {{$team['team_name']}}</h1>
+        @if(count($members) < $member_limit)
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">
         Tambah Anggota
         </button>
+        @endif
     </div>
     @include('component/validation')
 @stop

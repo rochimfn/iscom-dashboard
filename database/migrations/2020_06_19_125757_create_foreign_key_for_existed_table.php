@@ -18,10 +18,6 @@ class CreateForeignKeyForExistedTable extends Migration
         });
         Schema::table('mahasiswa', function (Blueprint $table) {
             $table->foreign('mahasiswa_team_id')->references('team_id')->on('teams');
-            $table->foreign('mahasiswa_nrp')->references('user_name')->on('users');
-        });
-        Schema::table('dosen', function (Blueprint $table) {
-            $table->foreign('user_id')->references('user_id')->on('users');
         });
         Schema::table('teams', function (Blueprint $table) {
             $table->foreign('team_competition_category_id')->references('competition_category_id')->on('competition_categories');

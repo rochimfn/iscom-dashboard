@@ -159,10 +159,11 @@ class UserController extends Controller
 
     public function memberIndex()
     {
-        $team = Team::with(['mahasiswa', 'user'])->find(Auth::user()->user_id);
-        $members =  Mahasiswa::with('user')->where('mahasiswa_team_id', $team->team_id )->get();
+        $team = Mahasiswa::with('team')->where('mahasiswa_nrp', Auth::user()->user_name)->first();
+        $members =  Mahasiswa::with('user')->where('mahasiswa_team_id', $team['mahasiswa_team_id'] )->get();
+        $member_limit = $team['category']['competition_category_team_limit'];
     
-        return view('participants/index')->with(['team' => $team, 'members' => $members]);
+        return view('participants/index')->with(['team' => $team['team'], 'members' => $members, 'member_limit' => $member_limit]);
     }
 
     public function memberStore(Request $request)
@@ -174,7 +175,7 @@ class UserController extends Controller
         ]);
         
         $leader = User::with('team')->find(Auth::user()->user_id);
-        $leader['team']['team_id'];
+        $leader_team_id = $leader['team']["team_id"];
 
         Mahasiswa::create([
             'mahasiswa_name' => $data['mahasiswa_name'],
