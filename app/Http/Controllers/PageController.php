@@ -9,6 +9,11 @@ use App\Page;
 
 class PageController extends Controller
 {
+    public function home()
+    {
+        $pages = Page::all();
+        return view('welcome')->with('pages', $pages);
+    }
 
     /**
      * Display a listing of the resource.
@@ -56,9 +61,11 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        $pages = Page::all();
+        $content = Page::where('slug', $slug)->first();
+        return view('page')->with(['pages' => $pages, 'content' => $content]);
     }
 
     /**

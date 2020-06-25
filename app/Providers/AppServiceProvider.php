@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
             if(Auth::user()->user_role_id == 1)
             {
                 $adminMenu = [
-                    ['header' => 'MENU NAVIGATION'],
+                    ['header' => 'MAIN NAVIGATION'],
                     [
                         'text'        => 'All Pages',
                         'url'         => 'dashboard/pages',
@@ -53,6 +53,11 @@ class AppServiceProvider extends ServiceProvider
                         'url'         => '/dashboard/users/dosen',
                         'icon'        => 'fa fa-fw fa-users',
                     ],
+                    [
+                        'text'        => 'Competition Session',
+                        'url'         => '/dashboard/session',
+                        'icon'        => 'fa fa-fw fa-calendar',
+                    ],
                     ['header' => 'account_settings'],
                     [
                         'text'        => 'profile',
@@ -73,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
             } elseif (Auth::user()->user_role_id == 2)
             {
                 $participantMenu = [
-                    ['header' => 'MENU NAVIGATION'],
+                    ['header' => 'MAIN NAVIGATION'],
                     [
                         'text'        => 'Team Member',
                         'url'         => '/home/members',
@@ -99,7 +104,7 @@ class AppServiceProvider extends ServiceProvider
             } elseif (Auth::user()->user_role_id == 3)
             {
                 $dosenMenu = [
-                    ['header' => 'MENU NAVIGATION'],
+                    ['header' => 'MAIN NAVIGATION'],
                     
                     ['header' => 'account_settings'],
                     [

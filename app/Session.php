@@ -25,7 +25,7 @@ class Session extends Model
      *
      * @var array
      */
-    protected $fillable = ['registration', 'kti_submit', 'non_kti_submit'];
+    protected $fillable = ['session_name', 'session_start', 'session_end'];
     
     
     /**

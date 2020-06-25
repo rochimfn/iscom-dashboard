@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-   return view('welcome');
-});
+// Routes for Landing
+Route::get('/', 'PageController@home')->name('home.page');
+Route::get('/pages/{slug}', 'PageController@show')->name('single.page');
 
 
 // Routes for Administrator
@@ -33,6 +32,8 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::post('/dashboard/users/dosen', 'UserController@storeDosen')->name('admin.users.dosen.store');
 	Route::put('/dashboard/users/dosen/{id}/', 'UserController@updateDosen')->name('admin.users.dosen.update');
 	Route::get('/dashboard/users', 'UserController@indexParticipants')->name('admin.users.participants.index');
+	Route::get('/dashboard/session', 'CompetitionController@sessionForm')->name('admin.form.session');
+	Route::put('/dashboard/session', 'CompetitionController@updateSession')->name('admin.update.session');
 
 	Route::get('/dashboard/settings', 'UserController@changeAdminProfile')->name('admin.change.profile');
 	Route::put('/dashboard/settings', 'UserController@updateAdminProfile')->name('admin.update.profile');
@@ -41,7 +42,7 @@ Route::middleware(['auth','admin'])->group( function() {
 });
 
 
-//Route Dosen
+//Route for Dosen
 Route::middleware(['auth','dosen'])->group( function() {
 	Route::get('/home/dosen/settings', 'UserController@changeDosenProfile')->name('dosen.change.profile');
 	Route::put('/home/dosen/settings', 'UserController@updateDosenProfile')->name('dosen.update.profile');
@@ -50,7 +51,7 @@ Route::middleware(['auth','dosen'])->group( function() {
 });
 
 
-//Routes untuk participants
+//Routes for participants
 Route::middleware(['auth','participant'])->group( function() {
 	Route::get('/home/members', 'UserController@memberIndex')->name('participants.users.index');
 	Route::delete('/home/users/{id}', 'UserController@memberDelete')->name('participants.users.delete');

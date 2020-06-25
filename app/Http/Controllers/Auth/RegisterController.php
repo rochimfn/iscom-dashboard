@@ -8,6 +8,7 @@ use App\User;
 use App\Mahasiswa;
 use App\Team;
 use App\CompetitionCategory;
+use App\Session;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,18 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
+        $registrationDateTime  = Session::where('session_name', 'registration')->first();
+        $start = strtotime($registrationDateTime['session_start']);
+        $end = strtotime($registrationDateTime['session_end']);
+
+        if( date("U") <= $start ) 
+        {
+            return redirect()->back()->withErrors('Registrasi belum dibuka');
+        } elseif ( date("U") >= $end)
+        {
+            return redirect()->back()->withErrors('Registrasi sudah ditutup');
+        }
+
         $competitionCategories = CompetitionCategory::all();
         return view('auth.register')->with('competitionCategories', $competitionCategories);
     }

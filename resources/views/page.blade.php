@@ -81,13 +81,18 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    IS Competition
+                    {{ $content['page_title']}}
                 </div>
 
                 <div class="links">
+                	<a href="{{ route('home.page') }}">Home</a>
                     @foreach($pages as $page)
                         <a href="{{ route('single.page', $page['slug']) }}">{{ $page['page_title']}}</a>
                     @endforeach
+                </div>
+
+                <div class="container">
+                	{!! $content['page_content'] !!}
                 </div>
             </div>
         </div>
