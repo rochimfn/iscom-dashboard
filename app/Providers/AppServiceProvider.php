@@ -55,8 +55,13 @@ class AppServiceProvider extends ServiceProvider
                     ],
                     [
                         'text'        => 'Competition Session',
-                        'url'         => '/dashboard/session',
+                        'url'         => '/dashboard/competition/session',
                         'icon'        => 'fa fa-fw fa-calendar',
+                    ],
+                    [
+                        'text'        => 'Competition Branch',
+                        'url'         => '/dashboard/competition/branch',
+                        'icon'        => 'fa fa-fw fa-clipboard-list',
                     ],
                     ['header' => 'account_settings'],
                     [

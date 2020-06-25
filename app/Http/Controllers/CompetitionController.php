@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Session;
+use App\CompetitionCategory;
 
 class CompetitionController extends Controller
 {
-    public function sessionForm()
+    public function sessionIndex()
     {
     	$sessions = Session::all()->keyBy('session_name');
     	return view('admin/competition/session')->with('sessions', $sessions);
@@ -36,7 +37,35 @@ class CompetitionController extends Controller
     		$session->save();
     	}
 
-    	return redirect()->route('admin.form.session')->with('success', 'Sessions Updated');
+    	return redirect()->route('admin.competition.update.session')->with('success', 'Sessions Updated');
+    }
+
+    public function branchIndex()
+    {
+        $branch = CompetitionCategory::all();
+        return view('admin/competition/branch')->with('branch', $branch);
+    }
+
+    public function branchStore(Request $request)
+    {
+        // $data = $this->validate($request, [
+        //     'competition_category_name' => ['required', 'string'],
+        //     'competition_category_abbreviation' => ['required', 'string', 'unique:App\CompetitionCategory,competition_category_abbreviation'],
+        //     'competition_category_team_limit' => ['required']
+        // ]);
+
+        // return $data;
+        return redirect()->back()->with('Dikunci oleh DBAdmin');
+    }
+
+    public function branchUpdate(Request $request, $id)
+    {
+        return redirect()->back()->with('Dikunci oleh DBAdmin');
+    }
+
+    public function branchDestroy(Request $request, $id)
+    {
+        return redirect()->back()->with('Dikunci oleh DBAdmin');
     }
 
     private function parseDate($dateTime)

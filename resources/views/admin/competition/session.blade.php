@@ -16,7 +16,7 @@
 @endphp
 
 @section('content')
-    <form action="{{ route('admin.update.session')}}" method="POST">
+    <form action="{{ route('admin.competition.update.session')}}" method="POST">
         @csrf
         @method('PUT')
         <label for="registration">Registrasi :</label>

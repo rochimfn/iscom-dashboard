@@ -32,8 +32,13 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::post('/dashboard/users/dosen', 'UserController@storeDosen')->name('admin.users.dosen.store');
 	Route::put('/dashboard/users/dosen/{id}/', 'UserController@updateDosen')->name('admin.users.dosen.update');
 	Route::get('/dashboard/users', 'UserController@indexParticipants')->name('admin.users.participants.index');
-	Route::get('/dashboard/session', 'CompetitionController@sessionForm')->name('admin.form.session');
-	Route::put('/dashboard/session', 'CompetitionController@updateSession')->name('admin.update.session');
+	
+	Route::get('/dashboard/competition/session', 'CompetitionController@sessionIndex')->name('admin.competition.index.session');
+	Route::put('/dashboard/competition/session', 'CompetitionController@updateSession')->name('admin.competition.update.session');
+	Route::get('/dashboard/competition/branch', 'CompetitionController@branchIndex')->name('admin.competition.index.branch');
+	Route::post('/dashboard/competition/branch/', 'CompetitionController@branchStore')->name('admin.competition.store.branch');
+	Route::put('/dashboard/competition/branch/{id}', 'CompetitionController@branchUpdate')->name('admin.competition.update.branch');
+	Route::delete('/dashboard/competition/branch/{id}', 'CompetitionController@branchDestroy')->name('admin.competition.destroy.branch');
 
 	Route::get('/dashboard/settings', 'UserController@changeAdminProfile')->name('admin.change.profile');
 	Route::put('/dashboard/settings', 'UserController@updateAdminProfile')->name('admin.update.profile');
