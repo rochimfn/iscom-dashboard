@@ -63,6 +63,40 @@ class AppServiceProvider extends ServiceProvider
                         'url'         => '/dashboard/competition/branch',
                         'icon'        => 'fa fa-fw fa-clipboard-list',
                     ],
+                    [
+                    'text'    => 'KTI',
+                    'icon'    => 'fas fa-fw fa-share',
+                    'submenu' => [
+                            [
+                            'text' => 'Instruksi',
+                            'icon' => 'fas fa-fw fa-arrow-right',
+                            'url'  => '/dashboard/competition/kti',
+                            'active' => ['/dashboard/competition/kti/','/dashboard/competition/kti/*']
+                            ],
+                            [
+                            'text' => 'Submisi',
+                            'icon' => 'fas fa-fw fa-arrow-right',
+                            'url'  => '#',
+                            ],
+                        ]
+                    ],
+                    [
+                    'text'    => 'NON KTI',
+                    'icon'    => 'fas fa-fw fa-share',
+                    'submenu' => [
+                            [
+                            'text' => 'Persoalan',
+                            'icon' => 'fas fa-fw fa-arrow-right',
+                            'url'  => '/dashboard/competition/non-kti',
+                            'active' => ['/dashboard/competition/non-kti/','/dashboard/competition/non-kti/*']
+                            ],
+                            [
+                            'text' => 'Submisi',
+                            'icon' => 'fas fa-fw fa-arrow-right',
+                            'url'  => '#',
+                            ],
+                        ]
+                    ],
                     ['header' => 'account_settings'],
                     [
                         'text'        => 'profile',
@@ -88,6 +122,11 @@ class AppServiceProvider extends ServiceProvider
                         'text'        => 'Team Member',
                         'url'         => '/home/members',
                         'icon'        => 'fa fa-fw fa-user-friends',
+                    ],
+                    [
+                        'text'        => 'Submisi',
+                        'url'         => '/home/submission',
+                        'icon'        => 'fa fa-fw fa-trophy',
                     ],
                     ['header' => 'account_settings'],
                     [

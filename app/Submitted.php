@@ -27,4 +27,8 @@ class Submitted extends Model
      */
     protected $fillable = ['submitted_question_id','submitted_team_id', 'submitted_title', 'submitted_file', 'submitted_competition_category_abbreviation'];
 
+    public function question()
+    {
+        return $this->belongsTo('App\Question', 'question_id', 'submitted_question_id');
+    }
 }

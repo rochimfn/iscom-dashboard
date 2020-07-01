@@ -58,4 +58,21 @@ class Team extends Model
             'mahasiswa_nrp'
             );
     }
+    public function question()
+    {
+        return $this->hasManyThrough(
+            'App\Question', 
+            'App\CompetitionCategory', 
+            'competition_category_id' ,
+            'question_competition_category_id', 
+            'team_competition_category_id',
+            'competition_category_id'
+            );
+    }
+
+    public function submission()
+    {
+        return $this->hasMany(
+            'App\Submitted', 'submitted_team_id', 'team_id');
+    }
 }

@@ -36,6 +36,11 @@ class CompetitionCategory extends Model
 
     public function team()
     {
-        return $this->HasMany('App\Team', 'team_competition_category_id', 'competition_category_id');
+        return $this->hasMany('App\Team', 'team_competition_category_id', 'competition_category_id');
+    }
+
+    public function question()
+    {
+        return $this->hasMany('App\Question', 'question_competition_category_id', 'competition_category_id');
     }
 }

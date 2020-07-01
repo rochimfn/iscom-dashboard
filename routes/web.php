@@ -40,6 +40,19 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::put('/dashboard/competition/branch/{id}', 'CompetitionController@branchUpdate')->name('admin.competition.update.branch');
 	Route::delete('/dashboard/competition/branch/{id}', 'CompetitionController@branchDestroy')->name('admin.competition.destroy.branch');
 
+	Route::get('/dashboard/competition/kti', 'CompetitionController@ktiIndexQuestion')->name('admin.competition.index.question.kti');
+	Route::post('/dashboard/competition/kti', 'CompetitionController@ktiStoreQuestion')->name('admin.competition.store.question.kti');
+	Route::get('/dashboard/competition/kti/{id}', 'CompetitionController@ktiEditQuestion')->name('admin.competition.edit.question.kti');
+	Route::put('/dashboard/competition/kti/{id}', 'CompetitionController@ktiUpdateQuestion')->name('admin.competition.update.question.kti');
+	Route::delete('/dashboard/competition/kti/{id}', 'CompetitionController@ktiDestroyQuestion')->name('admin.competition.destroy.question.kti');
+
+	Route::get('/dashboard/competition/non-kti', 'CompetitionController@nonKtiIndexQuestion')->name('admin.competition.index.question.non-kti');
+	Route::post('/dashboard/competition/non-kti', 'CompetitionController@nonKtiStoreQuestion')->name('admin.competition.store.question.non-kti');
+	Route::get('/dashboard/competition/non-kti/{id}', 'CompetitionController@nonKtiEditQuestion')->name('admin.competition.edit.question.non-kti');
+	Route::put('/dashboard/competition/non-kti/{id}', 'CompetitionController@nonKtiUpdateQuestion')->name('admin.competition.update.question.non-kti');
+	Route::delete('/dashboard/competition/non-kti/{id}', 'CompetitionController@nonKtiDestroyQuestion')->name('admin.competition.destroy.question.non-kti');
+
+
 	Route::get('/dashboard/settings', 'UserController@changeAdminProfile')->name('admin.change.profile');
 	Route::put('/dashboard/settings', 'UserController@updateAdminProfile')->name('admin.update.profile');
 	Route::get('/dashboard/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
@@ -62,6 +75,10 @@ Route::middleware(['auth','participant'])->group( function() {
 	Route::delete('/home/users/{id}', 'UserController@memberDelete')->name('participants.users.delete');
 	Route::post('/home/users', 'UserController@memberStore')->name('participants.users.store');
 	Route::put('/home/users/{id}/', 'UserController@memberUpdate')->name('participants.users.update');
+	
+	Route::get('/home/submission', 'CompetitionController@indexQuestion')->name('participants.question.index');
+	Route::post('/home/submission', 'CompetitionController@storeSubmission')->name('participants.submission.store');
+
 	Route::get('/home/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
 	Route::put('/home/password/', 'UserController@updatePassword')->name('update.password');
 	Route::get('/home/settings', 'UserController@changeParticipantProfile')->name('participants.change.profile');
