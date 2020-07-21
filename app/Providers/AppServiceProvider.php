@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events)
     {
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
-            
+
             if(Auth::user()->user_role_id == 1)
             {
                 $adminMenu = [
@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
                             'active' => ['/dashboard/competition/kti/','/dashboard/competition/kti/*']
                             ],
                             [
-                            'text' => 'Submisi',
+                            'text' => 'Submission',
                             'icon' => 'fas fa-fw fa-arrow-right',
                             'url'  => '#',
                             ],
@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
                             'active' => ['/dashboard/competition/non-kti/','/dashboard/competition/non-kti/*']
                             ],
                             [
-                            'text' => 'Submisi',
+                            'text' => 'Submission',
                             'icon' => 'fas fa-fw fa-arrow-right',
                             'url'  => '#',
                             ],
@@ -124,9 +124,9 @@ class AppServiceProvider extends ServiceProvider
                         'icon'        => 'fa fa-fw fa-user-friends',
                     ],
                     [
-                        'text'        => 'Submisi',
+                        'text'        => 'Submission',
                         'url'         => '/home/submission',
-                        'icon'        => 'fa fa-fw fa-trophy',
+                        'icon'        => 'fa fa-fw fa-file-upload',
                     ],
                     ['header' => 'account_settings'],
                     [
@@ -149,7 +149,7 @@ class AppServiceProvider extends ServiceProvider
             {
                 $dosenMenu = [
                     ['header' => 'MAIN NAVIGATION'],
-                    
+
                     ['header' => 'account_settings'],
                     [
                         'text' => 'profile',
@@ -160,15 +160,15 @@ class AppServiceProvider extends ServiceProvider
                         'text' => 'change_password',
                         'url'  => '/home/dosen/password/change',
                         'icon' => 'fas fa-fw fa-lock',
-                    ],              
+                    ],
                 ];
 
                 foreach ($dosenMenu as $menu) {
                     $event->menu->add($menu);
                 }
-            
+
             }
-            
+
             $contekan = [
                 [
                     'text'    => 'multilevel',

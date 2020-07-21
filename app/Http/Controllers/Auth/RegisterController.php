@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\User;
+use App\CompetitionCategory;
 use App\Mahasiswa;
 use App\Team;
-use App\CompetitionCategory;
+use App\User;
 use App\Session;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +40,7 @@ class RegisterController extends Controller
         $start = strtotime($registrationDateTime['session_start']);
         $end = strtotime($registrationDateTime['session_end']);
 
-        if( date("U") <= $start ) 
+        if( date("U") <= $start )
         {
             return redirect()->back()->withErrors('Registrasi belum dibuka');
         } elseif ( date("U") >= $end)
@@ -120,13 +120,13 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        if($user->user_role_id == 1) 
+        if($user->user_role_id == 1)
         {
             return redirect('/dashboard/users');
-        } elseif ($user->user_role_id == 2) 
+        } elseif ($user->user_role_id == 2)
         {
             return redirect('/home/members');
-        } elseif ($user->user_role_id == 3) 
+        } elseif ($user->user_role_id == 3)
         {
             return redirect('/home/dosen/settings');
         }

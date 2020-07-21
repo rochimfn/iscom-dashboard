@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//Development Route
+Route::get('/uhuy', 'CompetitionController@canUpload');
 // Routes for Landing
 Route::get('/', 'PageController@home')->name('home.page');
 Route::get('/pages/{slug}', 'PageController@show')->name('single.page');
@@ -19,6 +22,7 @@ Route::get('/pages/{slug}', 'PageController@show')->name('single.page');
 
 // Routes for Administrator
 Route::middleware(['auth','admin'])->group( function() {
+	Route::redirect('/dashboard', '/dashboard/users');
 	Route::get('/dashboard/pages', 'PageController@index')->name('admin.pages.index');
 	Route::get('/dashboard/pages/create', 'PageController@create')->name('admin.pages.create');
 	Route::get('/dashboard/pages/{slug}/edit', 'PageController@edit')->name('admin.pages.edit');
@@ -32,7 +36,7 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::post('/dashboard/users/dosen', 'UserController@storeDosen')->name('admin.users.dosen.store');
 	Route::put('/dashboard/users/dosen/{id}/', 'UserController@updateDosen')->name('admin.users.dosen.update');
 	Route::get('/dashboard/users', 'UserController@indexParticipants')->name('admin.users.participants.index');
-	
+
 	Route::get('/dashboard/competition/session', 'CompetitionController@sessionIndex')->name('admin.competition.index.session');
 	Route::put('/dashboard/competition/session', 'CompetitionController@updateSession')->name('admin.competition.update.session');
 	Route::get('/dashboard/competition/branch', 'CompetitionController@branchIndex')->name('admin.competition.index.branch');
@@ -62,6 +66,7 @@ Route::middleware(['auth','admin'])->group( function() {
 
 //Route for Dosen
 Route::middleware(['auth','dosen'])->group( function() {
+	Route::redirect('/home', '/login');
 	Route::get('/home/dosen/settings', 'UserController@changeDosenProfile')->name('dosen.change.profile');
 	Route::put('/home/dosen/settings', 'UserController@updateDosenProfile')->name('dosen.update.profile');
 	Route::get('/home/dosen/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
@@ -71,13 +76,15 @@ Route::middleware(['auth','dosen'])->group( function() {
 
 //Routes for participants
 Route::middleware(['auth','participant'])->group( function() {
+	Route::redirect('/home', '/login');
 	Route::get('/home/members', 'UserController@memberIndex')->name('participants.users.index');
 	Route::delete('/home/users/{id}', 'UserController@memberDelete')->name('participants.users.delete');
 	Route::post('/home/users', 'UserController@memberStore')->name('participants.users.store');
 	Route::put('/home/users/{id}/', 'UserController@memberUpdate')->name('participants.users.update');
-	
+
 	Route::get('/home/submission', 'CompetitionController@indexQuestion')->name('participants.question.index');
 	Route::post('/home/submission', 'CompetitionController@storeSubmission')->name('participants.submission.store');
+	Route::delete('/home/submission/{id}', 'CompetitionController@deleteSubmission')->name('participants.submission.delete');
 
 	Route::get('/home/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
 	Route::put('/home/password/', 'UserController@updatePassword')->name('update.password');

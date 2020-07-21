@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
-use App\Team;
-use App\Session;
 use App\CompetitionCategory;
+use App\Mahasiswa;
 use App\Question;
+use App\Session;
 use App\Submitted;
+use App\Team;
+use App\User;
 
 class CompetitionController extends Controller
 {
@@ -29,7 +30,7 @@ class CompetitionController extends Controller
     		'non_kti_submit_start' => ['required', 'date'],
     		'non_kti_submit_end' => ['required', 'date']
     	]);
-    	
+
     	$sessions = Session::all()->keyBy('session_name');
     	$sessions['registration']['session_start'] = $this->parseDate($data['registration_start']);
     	$sessions['registration']['session_end'] = $this->parseDate($data['registration_end']);
@@ -113,7 +114,7 @@ class CompetitionController extends Controller
 
         $question['question_title'] = $data['title'];
         $question['question_description'] = $data['description'];
-        
+
         $question->save();
 
         return redirect()->route('admin.competition.index.question.kti')->with('success', 'Instruksi berhasil diubah');
@@ -166,7 +167,7 @@ class CompetitionController extends Controller
 
         $question['question_title'] = $data['title'];
         $question['question_description'] = $data['description'];
-        
+
         $question->save();
 
         return redirect()->route('admin.competition.index.question.non-kti')->with('success', 'Instruksi berhasil diubah');
@@ -181,14 +182,101 @@ class CompetitionController extends Controller
 
     public function indexQuestion()
     {
-        $team = User::with('team')->where('user_id', Auth::user()->user_id)->first();
-        $team = $team['team'];
-        $questions = Team::with('question')->where('team_id', $team['team_id'])->first();
-        $questions = $questions['question'];
+        $canUpload = $this->canUpload();
+        if( $canUpload['status'] == false ) {
+            return view('participants/submission')->withErrors($canUpload['message'])->with(['questions' => [], 'submissions' => []]);
+        }
+
+        $team = User::with('team')->where('user_id', Auth::user()->user_id)->first()['team'];
+
+        // $questionsAndSubmissions = Team::with(['question', 'submission'])->where('team_id', $team['team_id'])->first();
+        $questions = Team::with('question')->where('team_id', $team['team_id'])->first()['question'];
         $submissions = Team::with('submission')->where('team_id', $team['team_id'])->first();
         $submissions = $submissions['submission']->keyBy('submitted_question_id');
 
         return view('participants/submission')->with(['questions' => $questions, 'submissions' => $submissions]);
+    }
+
+    public function storeSubmission(Request $request)
+    {
+        $canUpload = $this->canUpload();
+        if( $canUpload['status'] == false ) {
+            return redirect()->back()->withErrors($canUpload['message']);
+        }
+
+        $request->validate([
+          'submitted_question_id' => 'required',
+          'submission_file' => 'required|file'
+        ]);
+
+        $mahasiswa = Mahasiswa::with(['team', 'category'])->where('mahasiswa_nrp', Auth::user()->user_name)->first();
+
+        $submitted = new Submitted;
+        $submitted->submitted_question_id = $request->submitted_question_id;
+        $submitted->submitted_team_id = $mahasiswa['team']['team_id'];
+        $submitted->submitted_competition_category_abbreviation = $mahasiswa['category']['competition_category_abbreviation'];
+        if ($request->has('submitted_title')) {
+            $submitted->submitted_title = $request->submitted_title;
+        } else {
+            $question = Question::where('question_id', $request->submitted_question_id)->first()['question_title'];
+            $submitted->submitted_title = $mahasiswa['team']['team_name'] . ': ' . $question ;
+        }
+
+        $file = $request->file('submission_file');
+        $filename = $mahasiswa['team']['team_name'] . '_' . $submitted->submitted_title . '_' . time() .'.'. $file->getClientOriginalExtension();
+        $location = '/uploads/submissions/' . $mahasiswa['category']['competition_category_abbreviation'] .'/'. $mahasiswa['team']['team_name'];
+        $file->move(public_path($location), $filename);
+
+        $submitted->submitted_file = $location . '/' . $filename;
+        $submitted->save();
+
+        return redirect()->back()->with('success', 'Sumbisi berhasil diunggah');
+    }
+
+    public function deleteSubmission($id)
+    {
+        $team = Mahasiswa::with('team')->where('mahasiswa_nrp', Auth::user()->user_name)->first()['team'];
+        $submitted = Submitted::where(['submitted_question_id' => $id, 'submitted_team_id' => $team['team_id']])->first();
+        if ( empty($submitted) ) {
+            return redirect()->back()->withErrors('Someting wrong, can\'t delete');
+        }
+        unlink( public_path($submitted->submitted_file) );
+        $submitted->delete();
+
+        return redirect()->back()->with('success', 'Submisi berhasil dihapus');
+    }
+
+    private function isKti()
+    {
+        return Mahasiswa::with('category')->where('mahasiswa_nrp', Auth::user()->user_name)->first()['category']['is_kti'];
+    }
+
+    private function canUpload()
+    {
+        if($this->isKti()) {
+            $sessions = Session::where('session_name', 'kti_submit')->first();
+            $start = strtotime($sessions['session_start']);
+            $end = strtotime($sessions['session_end']);
+
+            return $this->checkDateSubmission($start, $end);
+        } else {
+            $sessions = Session::where('session_name', 'non_kti_submit')->first();
+            $start = strtotime($sessions['session_start']);
+            $end = strtotime($sessions['session_end']);
+
+            return $this->checkDateSubmission($start, $end);
+        }
+    }
+
+    private function checkDateSubmission($start, $end)
+    {
+        if( date("U") <= $start ) {
+            return ['status' => false, 'message' => 'Submisi belum dibuka'];
+        } elseif ( date("U") >= $end) {
+            return ['status' => false, 'message' => 'Submisi sudah ditutup'];
+        }
+
+        return ['status' => true];
     }
 
     private function parseDate($dateTime)

@@ -33,11 +33,15 @@
                 <option> {{ $category }}</option>
             </select>
         </div>
-        
+
         <div class="text-right mb-2">
             <br>
             <button type="button" class="btn btn-warning" onclick="return location.reload()">Cancel</button>
-            <button class="btn btn-primary" type="submit" >Ubah</button>
+            @if($canChangeProfile)
+                <button class="btn btn-primary" type="submit">Ubah</button>
+            @else
+                <button class="btn btn-primary" type="submit" disabled>Ubah</button>
+            @endif
 
         </div>
     </form>
