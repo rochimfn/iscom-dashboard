@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
             } elseif (Auth::user()->user_role_id == 2) {
                 return redirect('/home/members');
             } elseif (Auth::user()->user_role_id == 3) {
-                return redirect('/home/dosen/settings');
+                return redirect('/home/dosen/submission');
             }
 
             return redirect(RouteServiceProvider::HOME);

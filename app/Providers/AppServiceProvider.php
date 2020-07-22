@@ -71,12 +71,12 @@ class AppServiceProvider extends ServiceProvider
                             'text' => 'Instruksi',
                             'icon' => 'fas fa-fw fa-arrow-right',
                             'url'  => '/dashboard/competition/kti',
-                            'active' => ['/dashboard/competition/kti/','/dashboard/competition/kti/*']
+                            'active' => ['/dashboard/competition/kti/','regex:@^dashboard/competition/kti/[0-9]+$@']
                             ],
                             [
                             'text' => 'Submission',
                             'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '#',
+                            'url'  => '/dashboard/competition/kti/submission',
                             ],
                         ]
                     ],
@@ -88,12 +88,12 @@ class AppServiceProvider extends ServiceProvider
                             'text' => 'Persoalan',
                             'icon' => 'fas fa-fw fa-arrow-right',
                             'url'  => '/dashboard/competition/non-kti',
-                            'active' => ['/dashboard/competition/non-kti/','/dashboard/competition/non-kti/*']
+                            'active' => ['/dashboard/competition/non-kti/','regex:@^dashboard/competition/non-kti/[0-9]+$@']
                             ],
                             [
                             'text' => 'Submission',
                             'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '#',
+                            'url'  => '/dashboard/competition/non-kti/submission',
                             ],
                         ]
                     ],
@@ -149,7 +149,11 @@ class AppServiceProvider extends ServiceProvider
             {
                 $dosenMenu = [
                     ['header' => 'MAIN NAVIGATION'],
-
+                    [
+                        'text'        => 'Submission',
+                        'url'         => '/home/dosen/submission',
+                        'icon'        => 'fa fa-fw fa-file-upload',
+                    ],
                     ['header' => 'account_settings'],
                     [
                         'text' => 'profile',

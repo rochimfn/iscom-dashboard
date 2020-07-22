@@ -59,10 +59,12 @@
               @csrf
               <input type="hidden" name="submitted_question_id" value="">
                 <div class="modal-body">
+                  @if($isKti)
                     <div class="form-group">
                       <label for="submittedTitle">Judul</label>
                       <input type="text" class="form-control" name="submitted_title" id="submittedTitle" placeholder="Masukkan judul di sini" required>
                     </div>
+                  @endif
                     <div class="custom-file">
                         <input name="submission_file" type="file" class="custom-file-input" id="submitFile" required>
                         <label class="custom-file-label" for="customFile">Pilih file*</label>

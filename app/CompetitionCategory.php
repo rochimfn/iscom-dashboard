@@ -43,4 +43,9 @@ class CompetitionCategory extends Model
     {
         return $this->hasMany('App\Question', 'question_competition_category_id', 'competition_category_id');
     }
+
+    public function submitted()
+    {
+        return $this->hasMany('App\Submitted', 'submitted_competition_category_abbreviation', 'competition_category_abbreviation');
+    }
 }

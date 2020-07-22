@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ZipController;
 use App\CompetitionCategory;
 use App\Mahasiswa;
 use App\Question;
@@ -180,11 +181,57 @@ class CompetitionController extends Controller
         return redirect()->route('admin.competition.index.question.non-kti')->with('success', 'Instruksi berhasil dihapus');
     }
 
+    public function ktiIndexSubmission()
+    {
+        $submitted = CompetitionCategory::with('submitted')->where('is_kti', 1)->get();
+        return view('admin/competition/submission')->with(['submitted' => $submitted, 'isKti' => true]);
+    }
+
+    public function ktiDownloadSubmission($directory = null)
+    {
+        if($directory === null) {
+            $filename = 'kti';
+            $directory = '/uploads/submissions/kti';
+            return ZipController::downloadZip($filename, $directory);
+        }
+        $category = CompetitionCategory::where(['is_kti' => 1, 'competition_category_abbreviation' => $directory ])->first();
+        if(count() < 1) {
+            return redirect()->back()->withErrors('Something wrong, try again.');
+        }
+        $filename = $directory;
+        $directory = '/uploads/submissions/kti/' . $directory;
+        return ZipController::downloadZip($filename, $directory);
+    }
+
+    public function nonKtiIndexSubmission()
+    {
+      $submitted = CompetitionCategory::with('submitted')->where('is_kti', 0)->get();
+      return view('admin/competition/submission')->with(['submitted' => $submitted, 'isKti' => false]);
+    }
+
+    public function nonKtiDownloadSubmission($directory = null)
+    {
+        if($directory === null) {
+            $filename = 'non_kti';
+            $directory = '/uploads/submissions/non-kti';
+            return ZipController::downloadZip($filename, $directory);
+        }
+
+        $category = CompetitionCategory::where(['is_kti' => 0, 'competition_category_abbreviation' => $directory ])->first();
+        if(count() < 1) {
+            return redirect()->back()->withErrors('Something wrong, try again.');
+        }
+
+        $filename = $directory;
+        $directory = '/uploads/submissions/non-kti/' . $directory;
+        return ZipController::downloadZip($filename, $directory);
+    }
+
     public function indexQuestion()
     {
         $canUpload = $this->canUpload();
         if( $canUpload['status'] == false ) {
-            return view('participants/submission')->withErrors($canUpload['message'])->with(['questions' => [], 'submissions' => []]);
+            return view('participants/submission')->withErrors($canUpload['message'])->with(['questions' => [], 'submissions' => [], 'isKti' => []]);
         }
 
         $team = User::with('team')->where('user_id', Auth::user()->user_id)->first()['team'];
@@ -193,8 +240,33 @@ class CompetitionController extends Controller
         $questions = Team::with('question')->where('team_id', $team['team_id'])->first()['question'];
         $submissions = Team::with('submission')->where('team_id', $team['team_id'])->first();
         $submissions = $submissions['submission']->keyBy('submitted_question_id');
+        $isKti = $this->isKti();
 
-        return view('participants/submission')->with(['questions' => $questions, 'submissions' => $submissions]);
+        return view('participants/submission')->with(['questions' => $questions, 'submissions' => $submissions, 'isKti' => $isKti]);
+    }
+
+    public function indexSubmission()
+    {
+        $submitted = CompetitionCategory::with('submitted')->get();
+        return view('dosen/submission')->with('submitted', $submitted);
+    }
+
+    public function downloadSubmission($directory = null)
+    {
+        if($directory === null) {
+            $filename = 'submissions';
+            $directory = '/uploads/submissions';
+            return ZipController::downloadZip($filename, $directory);
+        }
+        $filename = $directory;
+        $category = CompetitionCategory::where('competition_category_abbreviation', $directory)->first()['is_kti'];
+
+        if($category) {
+            $directory = '/uploads/submissions/kti/' . $directory;
+        } else {
+            $directory = '/uploads/submissions/non-kti/' . $directory;
+        }
+        return ZipController::downloadZip($filename, $directory);
     }
 
     public function storeSubmission(Request $request)
@@ -219,12 +291,13 @@ class CompetitionController extends Controller
             $submitted->submitted_title = $request->submitted_title;
         } else {
             $question = Question::where('question_id', $request->submitted_question_id)->first()['question_title'];
-            $submitted->submitted_title = $mahasiswa['team']['team_name'] . ': ' . $question ;
+            $submitted->submitted_title =  $question ;
         }
 
         $file = $request->file('submission_file');
-        $filename = $mahasiswa['team']['team_name'] . '_' . $submitted->submitted_title . '_' . time() .'.'. $file->getClientOriginalExtension();
-        $location = '/uploads/submissions/' . $mahasiswa['category']['competition_category_abbreviation'] .'/'. $mahasiswa['team']['team_name'];
+        $filename = $submitted->submitted_title . '_('. $mahasiswa['team']['team_name'] . ')_' . time() .'.'. $file->getClientOriginalExtension();
+        $kti = $this->isKti() ? 'kti/' : 'non-kti/';
+        $location = '/uploads/submissions/' . $kti . $mahasiswa['category']['competition_category_abbreviation'] .'/'. $mahasiswa['team']['team_name'];
         $file->move(public_path($location), $filename);
 
         $submitted->submitted_file = $location . '/' . $filename;

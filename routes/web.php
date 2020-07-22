@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Development Route
-Route::get('/uhuy', 'CompetitionController@canUpload');
+Route::get('/uhuy/{filename}/{folder}', 'ZipController@downloadZip');
 // Routes for Landing
 Route::get('/', 'PageController@home')->name('home.page');
 Route::get('/pages/{slug}', 'PageController@show')->name('single.page');
@@ -45,12 +45,16 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::delete('/dashboard/competition/branch/{id}', 'CompetitionController@branchDestroy')->name('admin.competition.destroy.branch');
 
 	Route::get('/dashboard/competition/kti', 'CompetitionController@ktiIndexQuestion')->name('admin.competition.index.question.kti');
+	Route::get('/dashboard/competition/kti/submission', 'CompetitionController@ktiIndexSubmission')->name('admin.competition.index.submission.kti');
+	Route::get('/dashboard/competition/kti/submission/download/{directory?}', 'CompetitionController@ktiDownloadSubmission')->name('admin.competition.submission.download.kti');
 	Route::post('/dashboard/competition/kti', 'CompetitionController@ktiStoreQuestion')->name('admin.competition.store.question.kti');
 	Route::get('/dashboard/competition/kti/{id}', 'CompetitionController@ktiEditQuestion')->name('admin.competition.edit.question.kti');
 	Route::put('/dashboard/competition/kti/{id}', 'CompetitionController@ktiUpdateQuestion')->name('admin.competition.update.question.kti');
 	Route::delete('/dashboard/competition/kti/{id}', 'CompetitionController@ktiDestroyQuestion')->name('admin.competition.destroy.question.kti');
 
 	Route::get('/dashboard/competition/non-kti', 'CompetitionController@nonKtiIndexQuestion')->name('admin.competition.index.question.non-kti');
+	Route::get('/dashboard/competition/non-kti/submission', 'CompetitionController@nonKtiIndexSubmission')->name('admin.competition.index.submission.non-kti');
+	Route::get('/dashboard/competition/non-kti/submission/download/{directory?}', 'CompetitionController@nonKtiDownloadSubmission')->name('admin.competition.submission.download.non-kti');
 	Route::post('/dashboard/competition/non-kti', 'CompetitionController@nonKtiStoreQuestion')->name('admin.competition.store.question.non-kti');
 	Route::get('/dashboard/competition/non-kti/{id}', 'CompetitionController@nonKtiEditQuestion')->name('admin.competition.edit.question.non-kti');
 	Route::put('/dashboard/competition/non-kti/{id}', 'CompetitionController@nonKtiUpdateQuestion')->name('admin.competition.update.question.non-kti');
@@ -67,6 +71,10 @@ Route::middleware(['auth','admin'])->group( function() {
 //Route for Dosen
 Route::middleware(['auth','dosen'])->group( function() {
 	Route::redirect('/home', '/login');
+
+	Route::get('/home/dosen/submission', 'CompetitionController@indexSubmission')->name('dosen.index.submission');
+	Route::get('/home/dosen/submission/download/{directory?}', 'CompetitionController@downloadSubmission')->name('dosen.download.submission');
+
 	Route::get('/home/dosen/settings', 'UserController@changeDosenProfile')->name('dosen.change.profile');
 	Route::put('/home/dosen/settings', 'UserController@updateDosenProfile')->name('dosen.update.profile');
 	Route::get('/home/dosen/password/change', 'UserController@changePasswordForm')->name('change.passowrd');
