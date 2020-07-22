@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Development Route
-Route::get('/uhuy/{filename}/{folder}', 'ZipController@downloadZip');
+// Route::get('/uhuy/{filename}/{folder}', 'ZipController@downloadZip');
 // Routes for Landing
 Route::get('/', 'PageController@home')->name('home.page');
 Route::get('/pages/{slug}', 'PageController@show')->name('single.page');
