@@ -36,6 +36,7 @@ Route::middleware(['auth','admin'])->group( function() {
 	Route::post('/dashboard/users/dosen', 'UserController@storeDosen')->name('admin.users.dosen.store');
 	Route::put('/dashboard/users/dosen/{id}/', 'UserController@updateDosen')->name('admin.users.dosen.update');
 	Route::get('/dashboard/users', 'UserController@indexParticipants')->name('admin.users.participants.index');
+	Route::get ('/dashboard/users/download', 'UserController@exportParticipants')->name('admin.users.participants.download');
 
 	Route::get('/dashboard/competition/session', 'CompetitionController@sessionIndex')->name('admin.competition.index.session');
 	Route::put('/dashboard/competition/session', 'CompetitionController@updateSession')->name('admin.competition.update.session');

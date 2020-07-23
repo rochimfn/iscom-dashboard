@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,10 +16,12 @@ class UserSeeder extends Seeder
     {
         $user = [
         	[
-        		'user_name' => 'administrator',
+        		'user_name' => 'adminnich',
         		'email' => 'rochim@localhost',
         		'user_role_id' => 1,
-        		'password' => Hash::make('passworddefault')
+        		'password' => Hash::make('password'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
         	]
         ];
 

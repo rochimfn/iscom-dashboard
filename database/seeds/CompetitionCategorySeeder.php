@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -17,43 +18,57 @@ class CompetitionCategorySeeder extends Seeder
                 'competition_category_name' => 'Desain Pengalaman Pengguna',
                 'competition_category_abbreviation' => 'dpp',
                 'competition_category_team_limit' => 3,
-                'is_kti' => true
+                'is_kti' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Bisnis TIK',
                 'competition_category_abbreviation' => 'bistik',
                 'competition_category_team_limit' => 3,
-                'is_kti' => true
+                'is_kti' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Kota Cerdas',
                 'competition_category_abbreviation' => 'kc',
                 'competition_category_team_limit' => 3,
-                'is_kti' => true
+                'is_kti' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Pengembangan Perangkat Lunak',
                 'competition_category_abbreviation' => 'ppl',
                 'competition_category_team_limit' => 3,
-                'is_kti' => true
+                'is_kti' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Pengembangan Aplikasi Game',
                 'competition_category_abbreviation' => 'pag',
                 'competition_category_team_limit' => 3,
-                'is_kti' => true
+                'is_kti' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Visualisasi Data',
                 'competition_category_abbreviation' => 'visdat',
                 'competition_category_team_limit' => 2,
-                'is_kti' =>false
+                'is_kti' =>false,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Pemrograman Kompetitif Dasar',
                 'competition_category_abbreviation' => 'cc',
                 'competition_category_team_limit' => 2,
-                'is_kti' => false
+                'is_kti' => false,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]
         ];
 

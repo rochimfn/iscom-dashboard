@@ -8,10 +8,12 @@ use App\Mahasiswa;
 use App\Session;
 use App\Team;
 use App\User;
+use App\Exports\MahasiswasExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -20,9 +22,14 @@ class UserController extends Controller
     public function indexParticipants()
     {
         $participants = CompetitionCategory::with('team')->get();
-        $users = Mahasiswa::with('user')->with('team')->with('category')->get();
+        $users = Mahasiswa::with('user')->with('team')->with('category')->orderBy('mahasiswa_name')->get();
 
         return view('admin/index_participants')->with(['users' => $users, 'participants' => $participants]);
+    }
+
+    public function exportParticipants()
+    {
+        return Excel::download(new MahasiswasExport, 'peserta.xlsx');
     }
 
     public function indexDosen()

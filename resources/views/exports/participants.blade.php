@@ -1,22 +1,4 @@
-@extends('adminlte::page')
 
-@section('title', 'Participat List Page')
-
-@section('content_header')
-    <h1>Participat List Page </h1>
-    <div class="d-flex justify-content-between mt-2">
-        <a href="{{route('admin.users.participants.download')}}" class="btn btn-success"> Unduh .xlsx</a>
-        @foreach($participants as $participant)
-        <button type="button" class="btn btn-warning">
-        {{ strtoupper( $participant['competition_category_abbreviation']) }} 
-        <span class="badge badge-light"> {{ count($participant['team'])}}</span>
-        </button>
-        @endforeach
-    </div>
-    @include('component/validation')
-@stop
-
-@section('content')
 
     <table class="table table-striped table-responsive-sm" id="participatsTable">
         <thead>
@@ -46,14 +28,3 @@
             @endforeach
         </tbody>
     </table>
-@stop
-
-@section('js')
-    <script>
-        $(document).ready( function () {
-            $('#participatsTable').DataTable();
-        } );
-    </script>
-@stop
-
-@section('plugins.Datatables', true)
