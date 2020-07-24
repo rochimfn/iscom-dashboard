@@ -27,7 +27,7 @@ Route::middleware('auth')->group( function() {
 });
 
 // Routes for Administrator
-Route::prefix('/dashboard')->middleware(['auth','admin'])->name('admin')->group( function() {
+Route::prefix('/dashboard')->middleware(['auth','admin'])->name('admin.')->group( function() {
 
 	Route::get('/pages', 'PageController@index')->name('pages.index');
 	Route::get('/pages/create', 'PageController@create')->name('pages.create');
@@ -74,7 +74,7 @@ Route::prefix('/dashboard')->middleware(['auth','admin'])->name('admin')->group(
 
 
 //Route for Dosen
-Route::prefix('/home/dosen')->middleware(['auth','dosen'])->name('dosen')->group( function() {
+Route::prefix('/home/dosen')->middleware(['auth','dosen'])->name('dosen.')->group( function() {
 	Route::get('/submission', 'CompetitionController@indexSubmission')->name('index.submission');
 	Route::get('/submission/download/{directory?}', 'CompetitionController@downloadSubmission')->name('download.submission');
 
@@ -85,7 +85,7 @@ Route::prefix('/home/dosen')->middleware(['auth','dosen'])->name('dosen')->group
 
 
 //Routes for participants
-Route::prefix('/home')->middleware(['auth','participant'])->name('participants')->group( function() {
+Route::prefix('/home')->middleware(['auth','participant'])->name('participants.')->group( function() {
 	Route::get('/members', 'UserController@memberIndex')->name('users.index');
 	Route::delete('/users/{id}', 'UserController@memberDelete')->name('users.delete');
 	Route::post('/users', 'UserController@memberStore')->name('users.store');
