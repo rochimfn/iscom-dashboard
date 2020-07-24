@@ -42,7 +42,7 @@ class LoginController extends Controller
             return redirect('/home/members');
         } elseif ($user->user_role_id == 3) 
         {
-            return redirect('/home/dosen/settings');
+            return redirect('/home/dosen/submission');
         }
     }
 
