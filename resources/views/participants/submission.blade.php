@@ -66,7 +66,7 @@
                     </div>
                   @endif
                     <div class="custom-file">
-                        <input name="submission_file" type="file" class="custom-file-input" id="submitFile" required>
+                        <input name="submission_file" type="file" class="custom-file-input" id="submitFile" accept=".zip,.jar,.txt,.jpeg,.jpg,.jpe,.pdf,.docx,.doc,.dot,.ppt,.pps,.pot,.pptx" required>
                         <label class="custom-file-label" for="customFile">Pilih file*</label>
                         <small class="form-text form-muted text-danger">*Pastikan file yang anda submit sesuai dengan petunjuk</small>
                     </div>

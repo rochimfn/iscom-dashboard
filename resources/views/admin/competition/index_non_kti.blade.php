@@ -79,6 +79,7 @@
                         </div>
                         <div class="form-group">
                             <label for="instructionDescription">Deskripsi</label>
+                            <p class="text-danger"><strong><em>*Submisi hanya menerima file dengan extensi: zip,jar,txt,jpeg,jpg,jpe,pdf,docx,doc,dot,ppt,pps,pot dan pptx</em></strong></p>
                             <textarea class="form-control" name="description" id="instructionDescription">
                                 Tulis deskripsi disini
                             </textarea>

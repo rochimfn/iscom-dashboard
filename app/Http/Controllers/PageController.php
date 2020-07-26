@@ -125,9 +125,16 @@ class PageController extends Controller
         $request->validate([
            'file' => 'required|file|image'
         ]);
-
+        
         $file = $request->file('file');
         $filename = md5($file->getClientOriginalName(). time()) .'.'. $file->getClientOriginalExtension();
+        
+        // Another check before saving
+        $forbiddenExtensions = ['php','php3','php4','php5','phtml'];
+        $extension = strtolower($file->getClientOriginalExtension());
+        if( in_array($extension, $forbiddenExtensions) ) {
+            die();
+        }
 
         $file->move(public_path('/uploads'), $filename);
 

@@ -278,15 +278,17 @@ class CompetitionController extends Controller
 
         $request->validate([
           'submitted_question_id' => 'required',
-          'submission_file' => 'required|file'
+          'submission_file' => 'required|file|mimes:zip,jar,txt,jpeg,jpg,jpe,pdf,docx,doc,dot,ppt,pps,pot,pptx'
         ]);
 
         $mahasiswa = Mahasiswa::with(['team', 'category'])->where('mahasiswa_nrp', Auth::user()->user_name)->first();
+        $teamName = $mahasiswa['team']['team_name'];
+        $category = $mahasiswa['category']['competition_category_abbreviation'];
 
         $submitted = new Submitted;
         $submitted->submitted_question_id = $request->submitted_question_id;
         $submitted->submitted_team_id = $mahasiswa['team']['team_id'];
-        $submitted->submitted_competition_category_abbreviation = $mahasiswa['category']['competition_category_abbreviation'];
+        $submitted->submitted_competition_category_abbreviation = $category;
         if ($request->has('submitted_title')) {
             $submitted->submitted_title = $request->submitted_title;
         } else {
@@ -295,9 +297,17 @@ class CompetitionController extends Controller
         }
 
         $file = $request->file('submission_file');
-        $filename = $submitted->submitted_title . '_('. $mahasiswa['team']['team_name'] . ')_' . time() .'.'. $file->getClientOriginalExtension();
+        $filename = $submitted->submitted_title . '_('. $teamName . ')_' . time() .'.'. $file->getClientOriginalExtension();
         $kti = $this->isKti() ? 'kti/' : 'non-kti/';
-        $location = '/uploads/submissions/' . $kti . $mahasiswa['category']['competition_category_abbreviation'] .'/'. $mahasiswa['team']['team_name'];
+        $location = '/uploads/submissions/' . $kti . $category .'/'. $teamName;
+
+         // Another check before saving
+        $forbiddenExtensions = ['php','php3','php4','php5','phtml'];
+        $extension = strtolower($file->getClientOriginalExtension());
+        if( in_array($extension, $forbiddenExtensions) ) {
+            die();
+        }
+
         $file->move(public_path($location), $filename);
 
         $submitted->submitted_file = $location . '/' . $filename;

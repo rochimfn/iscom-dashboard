@@ -16,6 +16,7 @@
             <input type="text" class="form-control" name="title" id="editTitle" value="{{ $question['question_title']}}">
         </div>
         <div class="form-group">
+            <p class="text-danger"><strong><em>*Submisi hanya menerima file dengan extensi: zip,jar,txt,jpeg,jpg,jpe,pdf,docx,doc,dot,ppt,pps,pot dan pptx</em></strong></p>
             <label for="editDescription">Description</label>
             <textarea id="editDescription" class="form-control" name="description">{!!$question['question_description']!!}"
             </textarea>
