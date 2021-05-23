@@ -51,7 +51,7 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'dosen_name' => ['required', 'string'],
             'user_name' => ['required', 'alpha_dash', 'unique:App\User,user_name'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
+            'email' => ['required', 'string', 'email', 'max:191', 'unique:App\User,email'],
         ]);
 
         $user = User::create([
@@ -89,7 +89,7 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'dosen_name' => ['required', 'string'],
             'user_name' => ['required', 'alpha_dash'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:191'],
         ]);
 
         $user = User::where('user_id', $id)->first();
@@ -126,7 +126,7 @@ class UserController extends Controller
     public function updateAdminProfile(Request $request)
     {
         $data = $this->validate($request, [
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:191'],
         ]);
 
         $user = User::where('user_id', Auth::user()->user_id)->first();
@@ -153,7 +153,7 @@ class UserController extends Controller
     public function updateDosenProfile(Request $request)
     {
         $data = $this->validate($request, [
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:191'],
             'dosen_name' => ['required', 'string']
         ]);
 
@@ -196,7 +196,7 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'mahasiswa_name' => ['required', 'string'],
             'nrp' => ['required', 'alpha_dash', 'unique:App\User,user_name'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
+            'email' => ['required', 'string', 'email', 'max:191', 'unique:App\User,email'],
         ]);
 
         $leader = User::with('team')->find(Auth::user()->user_id);
@@ -235,7 +235,7 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'mahasiswa_name' => ['required', 'string'],
             'nrp' => ['required', 'alpha_dash'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:191'],
         ]);
 
         $team = Mahasiswa::where('mahasiswa_nrp', Auth::user()->user_name)->first();
@@ -296,7 +296,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors('Profil tidak dapat diubah');
         }
         $data = $this->validate($request, [
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:191'],
             'mahasiswa_name' => ['required', 'string'],
             'team_name' => ['required', 'string'],
         ]);
