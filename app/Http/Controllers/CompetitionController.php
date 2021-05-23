@@ -17,34 +17,34 @@ class CompetitionController extends Controller
 {
     public function sessionIndex()
     {
-    	$sessions = Session::all()->keyBy('session_name');
-    	return view('admin/competition/session')->with('sessions', $sessions);
+        $sessions = Session::all()->keyBy('session_name');
+        return view('admin/competition/session')->with('sessions', $sessions);
     }
 
     public function updateSession(Request $request)
     {
-    	$data = $this->validate($request,[
-    		'registration_start' => ['required', 'date'],
-    		'registration_end' => ['required', 'date'],
-    		'kti_submit_start' => ['required', 'date'],
-    		'kti_submit_end' => ['required', 'date'],
-    		'non_kti_submit_start' => ['required', 'date'],
-    		'non_kti_submit_end' => ['required', 'date']
-    	]);
+        $data = $this->validate($request, [
+            'registration_start' => ['required', 'date'],
+            'registration_end' => ['required', 'date'],
+            'kti_submit_start' => ['required', 'date'],
+            'kti_submit_end' => ['required', 'date'],
+            'non_kti_submit_start' => ['required', 'date'],
+            'non_kti_submit_end' => ['required', 'date']
+        ]);
 
-    	$sessions = Session::all()->keyBy('session_name');
-    	$sessions['registration']['session_start'] = $this->parseDate($data['registration_start']);
-    	$sessions['registration']['session_end'] = $this->parseDate($data['registration_end']);
-    	$sessions['kti_submit']['session_start'] = $this->parseDate($data['kti_submit_start']);
-    	$sessions['kti_submit']['session_end'] = $this->parseDate($data['kti_submit_end']);
-    	$sessions['non_kti_submit']['session_start'] = $this->parseDate($data['non_kti_submit_start']);
-    	$sessions['non_kti_submit']['session_end'] = $this->parseDate($data['non_kti_submit_end']);
+        $sessions = Session::all()->keyBy('session_name');
+        $sessions['registration']['session_start'] = $this->parseDate($data['registration_start']);
+        $sessions['registration']['session_end'] = $this->parseDate($data['registration_end']);
+        $sessions['kti_submit']['session_start'] = $this->parseDate($data['kti_submit_start']);
+        $sessions['kti_submit']['session_end'] = $this->parseDate($data['kti_submit_end']);
+        $sessions['non_kti_submit']['session_start'] = $this->parseDate($data['non_kti_submit_start']);
+        $sessions['non_kti_submit']['session_end'] = $this->parseDate($data['non_kti_submit_end']);
 
-    	foreach ($sessions as $session) {
-    		$session->save();
-    	}
+        foreach ($sessions as $session) {
+            $session->save();
+        }
 
-    	return redirect()->route('admin.competition.update.session')->with('success', 'Sessions Updated');
+        return redirect()->route('admin.competition.update.session')->with('success', 'Sessions Updated');
     }
 
     public function branchIndex()
@@ -83,9 +83,9 @@ class CompetitionController extends Controller
 
     public function ktiStoreQuestion(Request $request)
     {
-        $data = $this->validate($request,[
+        $data = $this->validate($request, [
             'branch' => ['required', 'numeric'],
-            'title' => ['required'],
+            'title' => ['required', 'max:191'],
             'description' => ['required']
         ]);
 
@@ -108,8 +108,8 @@ class CompetitionController extends Controller
     {
         $question = Question::where('question_id', $id)->first();
 
-        $data = $this->validate($request,[
-            'title' => ['required'],
+        $data = $this->validate($request, [
+            'title' => ['required', 'max:191'],
             'description' => ['required']
         ]);
 
@@ -136,9 +136,9 @@ class CompetitionController extends Controller
 
     public function nonKtiStoreQuestion(Request $request)
     {
-        $data = $this->validate($request,[
+        $data = $this->validate($request, [
             'branch' => ['required', 'numeric'],
-            'title' => ['required'],
+            'title' => ['required', 'max:191'],
             'description' => ['required']
         ]);
 
@@ -161,8 +161,8 @@ class CompetitionController extends Controller
     {
         $question = Question::where('question_id', $id)->first();
 
-        $data = $this->validate($request,[
-            'title' => ['required'],
+        $data = $this->validate($request, [
+            'title' => ['required', 'max:191'],
             'description' => ['required']
         ]);
 
@@ -189,13 +189,13 @@ class CompetitionController extends Controller
 
     public function ktiDownloadSubmission($directory = null)
     {
-        if($directory === null) {
+        if ($directory === null) {
             $filename = 'kti';
             $directory = '/uploads/submissions/kti';
             return ZipController::downloadZip($filename, $directory);
         }
-        $category = CompetitionCategory::where(['is_kti' => 1, 'competition_category_abbreviation' => $directory ])->first();
-        if(count($category) < 1) {
+        $category = CompetitionCategory::where(['is_kti' => 1, 'competition_category_abbreviation' => $directory])->first();
+        if (count($category) < 1) {
             return redirect()->back()->withErrors('Something wrong, try again.');
         }
         $filename = $directory;
@@ -205,20 +205,20 @@ class CompetitionController extends Controller
 
     public function nonKtiIndexSubmission()
     {
-      $submitted = CompetitionCategory::with('submitted')->where('is_kti', 0)->get();
-      return view('admin/competition/submission')->with(['submitted' => $submitted, 'isKti' => false]);
+        $submitted = CompetitionCategory::with('submitted')->where('is_kti', 0)->get();
+        return view('admin/competition/submission')->with(['submitted' => $submitted, 'isKti' => false]);
     }
 
     public function nonKtiDownloadSubmission($directory = null)
     {
-        if($directory === null) {
+        if ($directory === null) {
             $filename = 'non_kti';
             $directory = '/uploads/submissions/non-kti';
             return ZipController::downloadZip($filename, $directory);
         }
 
-        $category = CompetitionCategory::where(['is_kti' => 0, 'competition_category_abbreviation' => $directory ])->first();
-        if(count($category) < 1) {
+        $category = CompetitionCategory::where(['is_kti' => 0, 'competition_category_abbreviation' => $directory])->first();
+        if (count($category) < 1) {
             return redirect()->back()->withErrors('Something wrong, try again.');
         }
 
@@ -230,7 +230,7 @@ class CompetitionController extends Controller
     public function indexQuestion()
     {
         $canUpload = $this->canUpload();
-        if( $canUpload['status'] == false ) {
+        if ($canUpload['status'] == false) {
             return view('participants/submission')->withErrors($canUpload['message'])->with(['questions' => [], 'submissions' => [], 'isKti' => []]);
         }
 
@@ -253,7 +253,7 @@ class CompetitionController extends Controller
 
     public function downloadSubmission($directory = null)
     {
-        if($directory === null) {
+        if ($directory === null) {
             $filename = 'submissions';
             $directory = '/uploads/submissions';
             return ZipController::downloadZip($filename, $directory);
@@ -261,7 +261,7 @@ class CompetitionController extends Controller
         $filename = $directory;
         $category = CompetitionCategory::where('competition_category_abbreviation', $directory)->first()['is_kti'];
 
-        if($category) {
+        if ($category) {
             $directory = '/uploads/submissions/kti/' . $directory;
         } else {
             $directory = '/uploads/submissions/non-kti/' . $directory;
@@ -272,13 +272,14 @@ class CompetitionController extends Controller
     public function storeSubmission(Request $request)
     {
         $canUpload = $this->canUpload();
-        if( $canUpload['status'] == false ) {
+        if ($canUpload['status'] == false) {
             return redirect()->back()->withErrors($canUpload['message']);
         }
 
         $request->validate([
-          'submitted_question_id' => 'required',
-          'submission_file' => 'required|file|mimes:zip,jar,txt,jpeg,jpg,jpe,pdf,docx,doc,dot,ppt,pps,pot,pptx'
+            'submitted_question_id' => 'required',
+            'submission_title' => 'nullable|max:191',
+            'submission_file' => 'required|file|mimes:zip,jar,txt,jpeg,jpg,jpe,pdf,docx,doc,dot,ppt,pps,pot,pptx'
         ]);
 
         $mahasiswa = Mahasiswa::with(['team', 'category'])->where('mahasiswa_nrp', Auth::user()->user_name)->first();
@@ -293,18 +294,18 @@ class CompetitionController extends Controller
             $submitted->submitted_title = $request->submitted_title;
         } else {
             $question = Question::where('question_id', $request->submitted_question_id)->first()['question_title'];
-            $submitted->submitted_title =  $question ;
+            $submitted->submitted_title =  $question;
         }
 
         $file = $request->file('submission_file');
-        $filename = $submitted->submitted_title . '_('. $teamName . ')_' . time() .'.'. $file->getClientOriginalExtension();
+        $filename = $submitted->submitted_title . '_(' . $teamName . ')_' . time() . '.' . $file->getClientOriginalExtension();
         $kti = $this->isKti() ? 'kti/' : 'non-kti/';
-        $location = '/uploads/submissions/' . $kti . $category .'/'. $teamName;
+        $location = '/uploads/submissions/' . $kti . $category . '/' . $teamName;
 
-         // Another check before saving
-        $forbiddenExtensions = ['php','php3','php4','php5','phtml'];
+        // Another check before saving
+        $forbiddenExtensions = ['php', 'php3', 'php4', 'php5', 'phtml'];
         $extension = strtolower($file->getClientOriginalExtension());
-        if( in_array($extension, $forbiddenExtensions) ) {
+        if (in_array($extension, $forbiddenExtensions)) {
             die();
         }
 
@@ -320,10 +321,10 @@ class CompetitionController extends Controller
     {
         $team = Mahasiswa::with('team')->where('mahasiswa_nrp', Auth::user()->user_name)->first()['team'];
         $submitted = Submitted::where(['submitted_question_id' => $id, 'submitted_team_id' => $team['team_id']])->first();
-        if ( empty($submitted) ) {
+        if (empty($submitted)) {
             return redirect()->back()->withErrors('Someting wrong, can\'t delete');
         }
-        unlink( public_path($submitted->submitted_file) );
+        unlink(public_path($submitted->submitted_file));
         $submitted->delete();
 
         return redirect()->back()->with('success', 'Submisi berhasil dihapus');
@@ -336,7 +337,7 @@ class CompetitionController extends Controller
 
     private function canUpload()
     {
-        if($this->isKti()) {
+        if ($this->isKti()) {
             $sessions = Session::where('session_name', 'kti_submit')->first();
             $start = strtotime($sessions['session_start']);
             $end = strtotime($sessions['session_end']);
@@ -353,9 +354,9 @@ class CompetitionController extends Controller
 
     private function checkDateSubmission($start, $end)
     {
-        if( date("U") <= $start ) {
+        if (date("U") <= $start) {
             return ['status' => false, 'message' => 'Submisi belum dibuka'];
-        } elseif ( date("U") >= $end) {
+        } elseif (date("U") >= $end) {
             return ['status' => false, 'message' => 'Submisi sudah ditutup'];
         }
 
@@ -364,6 +365,6 @@ class CompetitionController extends Controller
 
     private function parseDate($dateTime)
     {
-    	return date("Y-m-d H:i:s",strtotime($dateTime));
+        return date("Y-m-d H:i:s", strtotime($dateTime));
     }
 }
