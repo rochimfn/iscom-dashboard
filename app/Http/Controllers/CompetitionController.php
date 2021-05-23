@@ -195,7 +195,7 @@ class CompetitionController extends Controller
             return ZipController::downloadZip($filename, $directory);
         }
         $category = CompetitionCategory::where(['is_kti' => 1, 'competition_category_abbreviation' => $directory])->first();
-        if (count($category) < 1) {
+        if (!$category) {
             return redirect()->back()->withErrors('Something wrong, try again.');
         }
         $filename = $directory;
@@ -218,7 +218,7 @@ class CompetitionController extends Controller
         }
 
         $category = CompetitionCategory::where(['is_kti' => 0, 'competition_category_abbreviation' => $directory])->first();
-        if (count($category) < 1) {
+        if (!$category) {
             return redirect()->back()->withErrors('Something wrong, try again.');
         }
 
