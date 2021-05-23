@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Contracts\Events\Dispatcher;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
@@ -26,10 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(Dispatcher $events)
     {
+        Schema::defaultStringLength(191);
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            if(Auth::user()->user_role_id == 1)
-            {
+            if (Auth::user()->user_role_id == 1) {
                 $adminMenu = [
                     ['header' => 'MAIN NAVIGATION'],
                     [
@@ -64,36 +65,36 @@ class AppServiceProvider extends ServiceProvider
                         'icon'        => 'fa fa-fw fa-clipboard-list',
                     ],
                     [
-                    'text'    => 'KTI',
-                    'icon'    => 'fas fa-fw fa-share',
-                    'submenu' => [
+                        'text'    => 'KTI',
+                        'icon'    => 'fas fa-fw fa-share',
+                        'submenu' => [
                             [
-                            'text' => 'Instruksi',
-                            'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '/dashboard/competition/kti',
-                            'active' => ['/dashboard/competition/kti/','regex:@^dashboard/competition/kti/[0-9]+$@']
+                                'text' => 'Instruksi',
+                                'icon' => 'fas fa-fw fa-arrow-right',
+                                'url'  => '/dashboard/competition/kti',
+                                'active' => ['/dashboard/competition/kti/', 'regex:@^dashboard/competition/kti/[0-9]+$@']
                             ],
                             [
-                            'text' => 'Submission',
-                            'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '/dashboard/competition/kti/submission',
+                                'text' => 'Submission',
+                                'icon' => 'fas fa-fw fa-arrow-right',
+                                'url'  => '/dashboard/competition/kti/submission',
                             ],
                         ]
                     ],
                     [
-                    'text'    => 'NON KTI',
-                    'icon'    => 'fas fa-fw fa-share',
-                    'submenu' => [
+                        'text'    => 'NON KTI',
+                        'icon'    => 'fas fa-fw fa-share',
+                        'submenu' => [
                             [
-                            'text' => 'Persoalan',
-                            'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '/dashboard/competition/non-kti',
-                            'active' => ['/dashboard/competition/non-kti/','regex:@^dashboard/competition/non-kti/[0-9]+$@']
+                                'text' => 'Persoalan',
+                                'icon' => 'fas fa-fw fa-arrow-right',
+                                'url'  => '/dashboard/competition/non-kti',
+                                'active' => ['/dashboard/competition/non-kti/', 'regex:@^dashboard/competition/non-kti/[0-9]+$@']
                             ],
                             [
-                            'text' => 'Submission',
-                            'icon' => 'fas fa-fw fa-arrow-right',
-                            'url'  => '/dashboard/competition/non-kti/submission',
+                                'text' => 'Submission',
+                                'icon' => 'fas fa-fw fa-arrow-right',
+                                'url'  => '/dashboard/competition/non-kti/submission',
                             ],
                         ]
                     ],
@@ -113,9 +114,7 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($adminMenu as $menu) {
                     $event->menu->add($menu);
                 }
-
-            } elseif (Auth::user()->user_role_id == 2)
-            {
+            } elseif (Auth::user()->user_role_id == 2) {
                 $participantMenu = [
                     ['header' => 'MAIN NAVIGATION'],
                     [
@@ -144,9 +143,7 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($participantMenu as $menu) {
                     $event->menu->add($menu);
                 }
-
-            } elseif (Auth::user()->user_role_id == 3)
-            {
+            } elseif (Auth::user()->user_role_id == 3) {
                 $dosenMenu = [
                     ['header' => 'MAIN NAVIGATION'],
                     [
@@ -170,7 +167,6 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($dosenMenu as $menu) {
                     $event->menu->add($menu);
                 }
-
             }
 
             $contekan = [
