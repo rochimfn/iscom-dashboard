@@ -40,12 +40,10 @@ class RegisterController extends Controller
         $start = strtotime($registrationDateTime['session_start']);
         $end = strtotime($registrationDateTime['session_end']);
 
-        if( date("U") <= $start )
-        {
-            return redirect()->back()->withErrors('Registrasi belum dibuka');
-        } elseif ( date("U") >= $end)
-        {
-            return redirect()->back()->withErrors('Registrasi sudah ditutup');
+        if (date("U") <= $start) {
+            return redirect()->route('login')->withErrors('Registrasi belum dibuka');
+        } elseif (date("U") >= $end) {
+            return redirect()->route('login')->withErrors('Registrasi sudah ditutup');
         }
 
         $competitionCategories = CompetitionCategory::all();
@@ -98,8 +96,8 @@ class RegisterController extends Controller
         $category = CompetitionCategory::where('competition_category_abbreviation', $data['competition_category'])->first();
 
         $team = Team::create([
-           'team_name' => $data['team_name'],
-           'team_competition_category_id' => $category->competition_category_id
+            'team_name' => $data['team_name'],
+            'team_competition_category_id' => $category->competition_category_id
         ]);
         $team->save();
 
@@ -120,14 +118,11 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        if($user->user_role_id == 1)
-        {
+        if ($user->user_role_id == 1) {
             return redirect('/dashboard/users');
-        } elseif ($user->user_role_id == 2)
-        {
+        } elseif ($user->user_role_id == 2) {
             return redirect('/home/members');
-        } elseif ($user->user_role_id == 3)
-        {
+        } elseif ($user->user_role_id == 3) {
             return redirect('/home/dosen/settings');
         }
     }
