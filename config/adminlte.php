@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>IS</b>COM',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>IS</b> Competition ',
+    'logo_img' => 'logo-rta-scaled-down.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'Logo RTA 2021',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,11 +109,11 @@ return [
     // 'classes_auth_btn' => 'btn-flat btn-primary',
 
     'classes_auth_card' => 'card-outline',
-    'classes_auth_header' => 'bg-gradient-warning',
+    'classes_auth_header' => 'bg-gradient-info',
     'classes_auth_body' => '',
     'classes_auth_footer' => 'text-center',
     'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn btn-warning',
+    'classes_auth_btn' => 'btn btn-info',
 
     /*
     |--------------------------------------------------------------------------
@@ -133,9 +133,9 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-warning elevation-4',
+    'classes_sidebar' => 'sidebar-dark-info elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-warning navbar-light',
+    'classes_topnav' => 'navbar-info navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
