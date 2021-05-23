@@ -19,6 +19,13 @@ class UserController extends Controller
 {
     use SendsPasswordResetEmails;
 
+    protected $salt;
+
+    public function __construct()
+    {
+        $this->salt = env('APP_SALT', '_pass');
+    }
+
     public function indexParticipants()
     {
         $participants = CompetitionCategory::with('team')->get();
@@ -41,16 +48,16 @@ class UserController extends Controller
 
     public function storeDosen(Request $request)
     {
-        $data = $this->validate($request,[
-            'dosen_name' => ['required','string'],
-            'user_name' => ['required','alpha_dash', 'unique:App\User,user_name'],
+        $data = $this->validate($request, [
+            'dosen_name' => ['required', 'string'],
+            'user_name' => ['required', 'alpha_dash', 'unique:App\User,user_name'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
         ]);
 
         $user = User::create([
             'user_name' => $data['user_name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['user_name'].'37645'),
+            'password' => Hash::make($data['user_name'] . $this->salt),
             'user_role_id' => 3, // Dosen
         ]);
 
@@ -61,15 +68,26 @@ class UserController extends Controller
             'dosen_user_id' => $user['user_id']
         ]);
 
-        $this->sendResetLinkEmail($request);
+        $success = [
+            'Evaluator berhasil ditambahkan.',
+            "Gunakan password : '{$data['user_name']}{$this->salt}' untuk masuk.",
+            'Atau ikuti reset password melalui email yang dikirimkan.'
+        ];
 
-        return redirect()->route('admin.users.dosen.index')->with('success', 'Evaluator berhasil ditambahkan');
+
+        try {
+            $this->sendResetLinkEmail($request);
+        } catch (\Exception $e) {
+            array_pop($success);
+        }
+
+        return redirect()->route('admin.users.dosen.index')->with('success', $success);
     }
 
     public function updateDosen(Request $request, $id)
     {
-        $data = $this->validate($request,[
-            'dosen_name' => ['required','string'],
+        $data = $this->validate($request, [
+            'dosen_name' => ['required', 'string'],
             'user_name' => ['required', 'alpha_dash'],
             'email' => ['required', 'string', 'email', 'max:255'],
         ]);
@@ -84,11 +102,7 @@ class UserController extends Controller
         $user->save();
         $dosen->save();
 
-        if($dosen['email'] !== $user['email']) {
-            $this->sendResetLinkEmail($request);
-        }
-
-        return redirect()->route('admin.users.dosen.index')->with('success', 'Data evaluator berhasi diubah');
+        return redirect()->route('admin.users.dosen.index')->with('success', 'Data evaluator berhasi diubah.');
     }
 
     public function deleteDosen($id)
@@ -100,7 +114,7 @@ class UserController extends Controller
         $user->delete();
         $dosen->delete();
 
-        return redirect()->route('admin.users.dosen.index')->with('success', 'Evaluator ' . $name .' berhasil dihapus');
+        return redirect()->route('admin.users.dosen.index')->with('success', "Evaluator {$name} berhasil dihapus");
     }
 
     public function changeAdminProfile()
@@ -117,12 +131,11 @@ class UserController extends Controller
 
         $user = User::where('user_id', Auth::user()->user_id)->first();
 
-        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+        if ($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
             return redirect()->back()->withErrors('Email sudah terdaftar');
         }
 
         $user['email'] = $data['email'];
-
         $user->save();
 
         return redirect()->route('admin.change.profile')->with('success', 'Profil berhasil diubah');
@@ -148,7 +161,7 @@ class UserController extends Controller
         $dosen = Dosen::where('user_id', Auth::user()->user_id)->first();
 
 
-        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+        if ($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
             return redirect()->back()->withErrors('Email sudah terdaftar');
         }
 
@@ -168,22 +181,25 @@ class UserController extends Controller
     public function memberIndex()
     {
         $team = Mahasiswa::with('team')->where('mahasiswa_nrp', Auth::user()->user_name)->first();
-        $members =  Mahasiswa::with('user')->where('mahasiswa_team_id', $team['mahasiswa_team_id'] )->get();
+        $members =  Mahasiswa::with('user')->where('mahasiswa_team_id', $team['mahasiswa_team_id'])->get();
         $member_limit = $team['category']['competition_category_team_limit'];
 
-        return view('participants/index')->with(['team' => $team['team'], 'members' => $members, 'member_limit' => $member_limit]);
+        return view('participants/index')->with([
+            'team' => $team['team'],
+            'members' => $members,
+            'member_limit' => $member_limit
+        ]);
     }
 
     public function memberStore(Request $request)
     {
-        $data = $this->validate($request,[
-            'mahasiswa_name' => ['required','string'],
-            'nrp' => ['required','alpha_dash', 'unique:App\User,user_name'],
+        $data = $this->validate($request, [
+            'mahasiswa_name' => ['required', 'string'],
+            'nrp' => ['required', 'alpha_dash', 'unique:App\User,user_name'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:App\User,email'],
         ]);
 
         $leader = User::with('team')->find(Auth::user()->user_id);
-        $leader_team_id = $leader['team']["team_id"];
 
         Mahasiswa::create([
             'mahasiswa_name' => $data['mahasiswa_name'],
@@ -195,19 +211,29 @@ class UserController extends Controller
         User::create([
             'user_name' => $data['nrp'],
             'email' => $data['email'],
-            'password' => Hash::make('Passwordyangsangatsusahditembus'),
+            'password' => Hash::make($data['nrp'] . $this->salt),
             'user_role_id' => 2, // Mahasiswa
         ]);
 
-        $this->sendResetLinkEmail($request);
+        $success = [
+            "Anggota berhasil ditambahkan ke Team {$leader['team']['team_name']}.",
+            "Gunakan password : '{$data['nrp']}{$this->salt}' untuk masuk.",
+            'Atau ikuti reset password melalui email yang dikirimkan.'
+        ];
 
-        return redirect()->route('participants.users.index')->with('success', 'Anggota berhasil ditambahkan ke Team ' . $leader['team']['team_name'] .', minta anggota periksa email');
+        try {
+            $this->sendResetLinkEmail($request);
+        } catch (\Exception $e) {
+            array_pop($success);
+        }
+
+        return redirect()->route('participants.users.index')->with('success', $success);
     }
 
     public function memberUpdate(Request $request, $id)
     {
-        $data = $this->validate($request,[
-            'mahasiswa_name' => ['required','string'],
+        $data = $this->validate($request, [
+            'mahasiswa_name' => ['required', 'string'],
             'nrp' => ['required', 'alpha_dash'],
             'email' => ['required', 'string', 'email', 'max:255'],
         ]);
@@ -218,7 +244,7 @@ class UserController extends Controller
         $mahasiswa = Mahasiswa::where('mahasiswa_nrp', $user['user_name'])->first();
 
 
-        if($team['mahasiswa_team_id'] !== $mahasiswa['mahasiswa_team_id']) {
+        if ($team['mahasiswa_team_id'] !== $mahasiswa['mahasiswa_team_id']) {
             return redirect('users/create')->withErrors('Maaf kamu tidak berhak');
         };
 
@@ -230,29 +256,31 @@ class UserController extends Controller
         $user->save();
         $mahasiswa->save();
 
-        if($mahasiswa['email'] !== $user['email']) {
-            $this->sendResetLinkEmail($request);
-        }
-
         return redirect()->route('participants.users.index')->with('success', 'Data anggota berhasi diubah');
     }
 
     public function memberDelete($id)
     {
+        if (Auth::id() == $id) {
+            return redirect()->back()->withErrors('Tidak dapat menghapus diri sendiri');
+        }
         $team = Mahasiswa::where('mahasiswa_nrp', Auth::user()->user_name)->first();
 
         $user = User::where('user_id', $id)->first();
         $mahasiswa = Mahasiswa::where('mahasiswa_nrp', $user['user_name'])->first();
 
-        if($team['mahasiswa_team_id'] !== $mahasiswa['mahasiswa_team_id']) {
+        if ($team['mahasiswa_team_id'] !== $mahasiswa['mahasiswa_team_id']) {
             return redirect('users/create')->withErrors('Maaf kamu tidak berhak');
         };
+        if ($mahasiswa['is_team_leader']) {
+            return redirect()->back()->withErrors('Ketua tidak dapat dihapus');
+        }
 
         $name = $mahasiswa['mahasiswa_name'];
         $user->delete();
         $mahasiswa->delete();
 
-        return redirect()->route('participants.users.index')->with('success', 'Anggota ' . $name .' berhasil dihapus dari Tim');
+        return redirect()->route('participants.users.index')->with('success', 'Anggota ' . $name . ' berhasil dihapus dari Tim');
     }
 
     public function changeParticipantProfile()
@@ -264,8 +292,7 @@ class UserController extends Controller
 
     public function updateParticipantProfile(Request $request)
     {
-        if( !$this->canChangeProfile() )
-        {
+        if (!$this->canChangeProfile()) {
             return redirect()->back()->withErrors('Profil tidak dapat diubah');
         }
         $data = $this->validate($request, [
@@ -275,15 +302,15 @@ class UserController extends Controller
         ]);
 
         $user = User::where('user_id', Auth::user()->user_id)->first();
-        $mahasiswa = Mahasiswa::where('mahasiswa_nrp',$user['user_name'])->first();
+        $mahasiswa = Mahasiswa::where('mahasiswa_nrp', $user['user_name'])->first();
         $team = Team::where('team_id', $mahasiswa['mahasiswa_team_id'])->first();
 
 
-        if($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
+        if ($user['email'] !== $data['email'] && !empty(User::where('email', $data['email'])->first())) {
             return redirect()->back()->withErrors('Email sudah terdaftar');
         }
 
-        if($team['team_name'] !== $data['team_name'] && !empty(Team::where('team_name', $data['team_name'])->first())) {
+        if ($team['team_name'] !== $data['team_name'] && !empty(Team::where('team_name', $data['team_name'])->first())) {
             return redirect()->back()->withErrors('Nama Tim sudah terdaftar');
         }
 
@@ -308,20 +335,18 @@ class UserController extends Controller
     public function updatePassword(Request $request)
     {
         $data = $this->validate($request, [
-            'old_password' => ['required','string'],
-            'new_password' => ['required','string'],
-            'confirmation_new_password' => ['required','string']
+            'old_password' => ['required', 'string'],
+            'new_password' => ['required', 'string'],
+            'confirmation_new_password' => ['required', 'string']
         ]);
 
-        if($data['new_password'] !== $data['confirmation_new_password'])
-        {
+        if ($data['new_password'] !== $data['confirmation_new_password']) {
             return redirect()->back()->withErrors('Konfirmasi password tidak sesuai');
         }
 
         $user = User::where('user_id', Auth::user()->user_id)->first();
 
-        if( !Hash::check( $data['old_password'], $user['password']))
-        {
+        if (!Hash::check($data['old_password'], $user['password'])) {
             return redirect()->back()->withErrors('Password lama tidak sesuai');
         }
 
@@ -336,7 +361,7 @@ class UserController extends Controller
         $sessions = Session::all()->keyBy('session_name');
         $isKti = Mahasiswa::with('category')->where('mahasiswa_nrp', Auth::user()->user_name)->first()['category']['is_kti'];
 
-        if($isKti) {
+        if ($isKti) {
             return date("U") <= strtotime($sessions['kti_submit']['session_end']);
         } else {
             return date("U") <= strtotime($sessions['non_kti_submit']['session_end']);
