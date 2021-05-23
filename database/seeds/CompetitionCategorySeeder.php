@@ -47,25 +47,25 @@ class CompetitionCategorySeeder extends Seeder
                 'updated_at' => Carbon::now()
             ],
             [
-                'competition_category_name' => 'Pengembangan Aplikasi Game',
-                'competition_category_abbreviation' => 'pag',
+                'competition_category_name' => 'Pengembangan Aplikasi Permainan',
+                'competition_category_abbreviation' => 'pap',
                 'competition_category_team_limit' => 3,
                 'is_kti' => true,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'competition_category_name' => 'Visualisasi Data',
-                'competition_category_abbreviation' => 'visdat',
-                'competition_category_team_limit' => 2,
-                'is_kti' =>false,
+                'competition_category_name' => 'Penambangan Data',
+                'competition_category_abbreviation' => 'pd',
+                'competition_category_team_limit' => 3,
+                'is_kti' => true,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'competition_category_name' => 'Pemrograman Kompetitif Dasar',
                 'competition_category_abbreviation' => 'cc',
-                'competition_category_team_limit' => 2,
+                'competition_category_team_limit' => 3,
                 'is_kti' => false,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
