@@ -19,7 +19,7 @@
             <label for="pageContent">Konten</label>
             <p class="text-danger"><em>*Gunakan menu insert untuk memasukkan gambar</em></p>
             <textarea name="page_content" class="form-control" id="pageContent" rows="10">
-                {{$page['page_content']}}
+                {!! $page['page_content'] !!}
             </textarea>
         </div>
         <div class="text-right mb-2">
