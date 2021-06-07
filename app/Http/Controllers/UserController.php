@@ -350,7 +350,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors('Password lama tidak sesuai');
         }
 
-        $user['password'] = $data['new_password'];
+        $user['password'] = Hash::make($data['new_password']);
         $user->save();
 
         return redirect()->back()->with('success', 'Password berhasil diubah');
