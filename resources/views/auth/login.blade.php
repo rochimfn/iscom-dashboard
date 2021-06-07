@@ -60,7 +60,7 @@
 
 @section('auth_footer')
     {{-- Password reset link --}}
-    @if(route('password.request'))
+    @if(config('password_reset_url'))
         <p class="my-0">
             <a href="{{ route('password.request') }}">
                 {{ 'Lupa password?' }}
